@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+from urllib.parse import parse_qsl, urlencode
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -51,6 +52,31 @@ def _prepare_runtime() -> None:
 
 _prepare_runtime()
 app = FastAPI(title="Groww MF Facts Assistant", docs_url="/api/docs", openapi_url="/api/openapi.json")
+
+
+class RewrittenPathMiddleware:
+    """Restore the original /api/<path> on Vercel.
+
+    vercel.json rewrites /api/:path* to /api/index?__path=:path*, and the function may see
+    /api/index rather than the URL the browser asked for. When __path is present, route on
+    /api/<__path> and drop the parameter; otherwise leave the request untouched (local runs).
+    """
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            query = parse_qsl(scope.get("query_string", b"").decode(), keep_blank_values=True)
+            rewritten = [value for key, value in query if key == "__path"]
+            if rewritten:
+                path = "/api/" + rewritten[0].lstrip("/")
+                rest = urlencode([(key, value) for key, value in query if key != "__path"])
+                scope = {**scope, "path": path, "raw_path": path.encode(), "query_string": rest.encode()}
+        await self.app(scope, receive, send)
+
+
+app.add_middleware(RewrittenPathMiddleware)
 
 
 class AskRequest(BaseModel):
@@ -105,6 +131,12 @@ def ask(request: AskRequest) -> dict:
         ],
         "prompt": answer.prompt,
     }
+
+
+@app.api_route("/api/{rest:path}", methods=["GET", "POST"], include_in_schema=False)
+def unknown_api_route(rest: str) -> None:
+    # Say which path arrived, so routing problems (e.g. a platform rewrite) are visible.
+    raise HTTPException(status_code=404, detail=f"No API route for /api/{rest}")
 
 
 if not ON_VERCEL and PUBLIC.exists():

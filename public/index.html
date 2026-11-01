@@ -411,11 +411,14 @@ async function ask(question, openTrace = false) {
       body: JSON.stringify({ question }),
     });
     if (!response.ok) {
+      const detail = (await response.json().catch(() => ({}))).detail;
       throw new Error(response.status === 503
         ? "The source library isn't loaded on the server yet. Run the ingest step, then redeploy."
         : response.status === 422
           ? "That question is too long. Keep it under 500 characters."
-          : "The answer service didn't respond. Try asking again in a moment.");
+          : response.status === 404 && typeof detail === "string"
+            ? `The answer service is misrouted: ${detail}. Check the rewrites in vercel.json.`
+            : "The answer service didn't respond. Try asking again in a moment.");
     }
     renderSlip(slip, question, await response.json());
     if (openTrace) slip.querySelector("details.trace")?.setAttribute("open", "");

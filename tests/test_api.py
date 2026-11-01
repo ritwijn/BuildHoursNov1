@@ -69,3 +69,16 @@ def test_missing_corpus_returns_503(client, monkeypatch):
 
     monkeypatch.setattr("api.index.answer_question", raise_ingest)
     assert client.post("/api/ask", json={"question": "Expense ratio of HDFC Large Cap?"}).status_code == 503
+
+
+def test_vercel_rewritten_paths_reach_the_right_routes(client):
+    # vercel.json sends /api/<path> to /api/index?__path=<path>; the function may only see /api/index.
+    assert client.get("/api/index?__path=status").json()["ready"] is True
+    answer = client.post("/api/index?__path=ask", json={"question": "Should I buy HDFC Flexi Cap?"}).json()
+    assert answer["status"] == "refused"
+
+
+def test_unknown_api_route_names_the_path(client):
+    response = client.post("/api/index", json={"question": "x"})
+    assert response.status_code == 404
+    assert response.json()["detail"] == "No API route for /api/index"
