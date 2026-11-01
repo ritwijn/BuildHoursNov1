@@ -3,7 +3,6 @@ advice:
   - buy
   - sell
   - switch
-  - invest in
   - better for me
   - recommend
   - which fund
@@ -11,6 +10,12 @@ advice:
   - good fund
   - portfolio
   - worth it
+  # Asking whether to invest is a decision, not a fact ("buy" already covers "can I buy").
+  - can i invest
+  - is it good to invest
+  - good time to invest
+  - safe to invest
+  - worth investing
 
 returns:
   - return

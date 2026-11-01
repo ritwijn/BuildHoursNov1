@@ -145,3 +145,17 @@ def test_missing_key_is_reported_as_not_configured(settings, fake_retrieve, monk
     settings.groq_api_key = None
     answer = answer_question("Expense ratio of HDFC Large Cap?", settings=settings, sources=SOURCES)
     assert answer.status == "error" and "llm_reason:not_configured" in answer.flags
+
+
+@pytest.mark.parametrize(
+    "question, reply, url",
+    [
+        ("Who is the trustee of the scheme?", "I couldn't find that in my sources.", "https://groww.in/amc"),
+        ("What is the dividend history of HDFC Mid Cap?", "I couldn't find that in my sources.", "https://groww.in/mid"),
+        ("What is the AUM of HDFC Mid Cap?", "The AUM is ₹99,999 Cr.\nSource: https://groww.in/large", "https://groww.in/mid"),
+    ],
+)
+def test_model_not_found_cites_scheme_or_fallback_not_the_unrelated_top_hit(settings, fake_retrieve, question, reply, url):
+    answer = ask(question, settings, FakeLLM(reply=reply))
+    assert answer.status == "not_found"
+    assert answer.source_url == url

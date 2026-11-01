@@ -82,7 +82,11 @@ def answer_question(
         return _logged(answer, settings)
 
     checked = postcheck(raw, result.hits, max_sentences=settings.answer.max_sentences, refusal_url=refusal_url)
-    answer = Answer(status=checked.status, body=checked.body, source_url=checked.source_url, prompt=messages, **common)
+    source_url = checked.source_url
+    if checked.status == "not_found":
+        # The top passage didn't contain the answer, so citing it would point at an unrelated page.
+        source_url = by_id[intent.scheme_id].url if intent.scheme_id in by_id else fallback_url
+    answer = Answer(status=checked.status, body=checked.body, source_url=source_url, prompt=messages, **common)
     answer.flags.extend(checked.flags)
     answer.flags.append(f"llm:{getattr(client, 'name', 'llm')}:{settings.llm.model}")
     return _logged(answer, settings, raw=raw)
