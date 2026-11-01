@@ -1,0 +1,55 @@
+embedding:
+  model: sentence-transformers/all-MiniLM-L6-v2
+  normalize: true
+  batch_size: 32
+
+chroma:
+  persist_dir: data/chroma
+  collection: mf_faq
+  distance: cosine
+
+chunking:
+  strategy: section          # section | recursive
+  chunk_size: 800
+  chunk_overlap: 100
+  min_chunk_chars: 40
+  # Also index each line of a "Label: Value" fact list (e.g. Key facts) as its own chunk
+  fact_chunks: true
+
+retrieval:
+  top_k: 5
+  min_score: 0.35
+  scheme_boost: true
+  # Appended to the question before embedding only (anchors short questions to the MF domain)
+  query_suffix: " (mutual funds)"
+
+loader:
+  timeout_s: 20
+  user_agent: "MF-FAQ-Prototype/1.0 (educational demo)"
+  min_text_chars: 500
+  use_browser_fallback: true
+  request_delay_s: 1.0
+
+answer:
+  max_sentences: 3
+  # All must be source ids from sources.yaml
+  refusal_url_source_id: sebi-investor-education   # advice refusals: investor education link
+  returns_source_id: hdfc-factsheet-jun-2026       # returns questions: official factsheet
+  fallback_source_id: hdfc-amc                     # out-of-scope / weak-match answers
+  # Manifest field shown as "Last updated from sources": last_ingest_at | sources_fetched_at
+  last_updated_field: last_ingest_at
+  dump_prompts: false
+
+llm:
+  provider: groq
+  model: qwen/qwen3.8-27b
+  temperature: 0
+  timeout_s: 30
+  max_tokens: 400
+
+paths:
+  raw_dir: data/raw
+  chunks_file: data/chunks/chunks.jsonl
+  embeddings_dir: data/embeddings
+  manifest_file: data/ingest_manifest.json
+  retrieval_log_dir: data/retrieval_logs

@@ -1,0 +1,93 @@
+advice:
+  - should i
+  - buy
+  - sell
+  - switch
+  - invest in
+  - better for me
+  - recommend
+  - which fund
+  - which is better
+  - good fund
+  - portfolio
+  - worth it
+
+returns:
+  - return
+  - returns
+  - cagr
+  - performance
+  - performed
+  - outperform
+  - best performing
+  - compare performance
+  - how much will i get
+  - nav growth
+
+factual:
+  - expense ratio
+  - exit load
+  - sip
+  - minimum
+  - lock-in
+  - lock in
+  - riskometer
+  - risk
+  - benchmark
+  - statement
+  - capital gains
+  - fund manager
+  - aum
+  - nav
+  - elss
+
+out_of_scope_amcs:
+  - sbi
+  - icici
+  - axis
+  - nippon
+  - kotak
+  - uti
+  - dsp
+  - tata
+  - franklin
+  - mirae
+  - ppfas
+  - parag parikh
+  - motilal
+  - quant
+  - aditya birla
+  - birla sun
+
+# Fund-type words. If a question uses one but names no scheme in sources.yaml,
+# it is about a scheme outside this prototype's sources (fail closed).
+scheme_terms:
+  - small cap
+  - smallcap
+  - multi cap
+  - multicap
+  - large and mid cap
+  - liquid fund
+  - debt fund
+  - index fund
+  - hybrid
+  - balanced advantage
+  - gilt
+  - overnight fund
+  - arbitrage
+  - focused fund
+  - value fund
+  - infrastructure fund
+  - banking and financial
+  - pharma fund
+  - technology fund
+  - dividend yield
+  - corporate bond
+  - short term debt
+  - etf
+
+# Names that are also an AMC but appear in normal questions (Groww is the product here,
+# and also runs Groww Mutual Fund). Out of scope only when followed by a fund name,
+# e.g. "Groww ELSS Tax Saver Fund", not "download my statement on Groww".
+amc_brands_needing_fund_name:
+  - groww

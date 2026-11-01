@@ -1,0 +1,136 @@
+sources:
+  - id: hdfc-amc
+    title: HDFC Mutual Fund (AMC overview)
+    url: https://groww.in/mutual-funds/amc/hdfc-mutual-funds
+    type: amc
+    scheme: null
+    aliases: [hdfc mutual fund, hdfc amc]
+    required: true
+
+  - id: hdfc-large-cap-direct-growth
+    title: HDFC Large Cap Fund Direct Growth
+    url: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth
+    type: scheme
+    scheme: HDFC Large Cap Fund
+    aliases: [hdfc large cap, hdfc top 100]
+    required: true
+
+  - id: hdfc-flexi-cap-direct-growth
+    title: HDFC Flexi Cap Direct Plan Growth
+    url: https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth
+    type: scheme
+    scheme: HDFC Flexi Cap Fund
+    aliases: [hdfc flexi cap, hdfc equity fund, hdfc flexicap]
+    required: true
+
+  - id: hdfc-elss-tax-saver-direct-growth
+    title: HDFC ELSS Tax Saver Fund Direct Plan Growth
+    url: https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth
+    type: scheme
+    scheme: HDFC ELSS Tax Saver Fund
+    aliases: [hdfc elss, hdfc tax saver, hdfc taxsaver]
+    required: true
+
+  - id: hdfc-mid-cap-direct-growth
+    title: HDFC Mid Cap Fund Direct Growth
+    url: https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth
+    type: scheme
+    scheme: HDFC Mid Cap Fund
+    aliases: [hdfc mid cap, hdfc midcap]
+    required: true
+
+  # --- Additional official sources (optional; failures don't stop ingest) ---
+  # HDFC Mutual Fund scheme documents (KIM / SID), dated 21 Nov 2025
+  - id: hdfc-large-cap-kim
+    title: KIM - HDFC Large Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/KIM/2025-11/KIM%20-%20HDFC%20Large%20Cap%20Fund%20dated%20November%2021,%202025.pdf"
+    type: kim
+    scheme: HDFC Large Cap Fund
+  - id: hdfc-large-cap-sid
+    title: SID - HDFC Large Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20Large%20Cap%20Fund%20dated%20November%2021,%202025.pdf"
+    type: sid
+    scheme: HDFC Large Cap Fund
+  - id: hdfc-flexi-cap-kim
+    title: KIM - HDFC Flexi Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/KIM/2025-11/KIM%20-%20HDFC%20Flexi%20Cap%20Fund%20dated%20November%2021,%202025.pdf"
+    type: kim
+    scheme: HDFC Flexi Cap Fund
+  - id: hdfc-flexi-cap-sid
+    title: SID - HDFC Flexi Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20Flexi%20Cap%20Fund%20dated%20November%2021,%202025.pdf"
+    type: sid
+    scheme: HDFC Flexi Cap Fund
+  - id: hdfc-elss-kim
+    title: KIM - HDFC ELSS Tax Saver (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/KIM/2025-11/KIM%20-%20HDFC%20ELSS%20Tax%20Saver%20dated%20November%2021,%202025.pdf"
+    type: kim
+    scheme: HDFC ELSS Tax Saver Fund
+  - id: hdfc-elss-sid
+    title: SID - HDFC ELSS Tax Saver (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20ELSS%20Tax%20Saver%20dated%20November%2021,%202025.pdf"
+    type: sid
+    scheme: HDFC ELSS Tax Saver Fund
+  - id: hdfc-mid-cap-kim
+    title: KIM - HDFC Mid Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/KIM/2025-11/KIM%20-%20HDFC%20Mid%20Cap%20Fund%20dated%20November%2021,%202025_1.pdf"
+    type: kim
+    scheme: HDFC Mid Cap Fund
+  - id: hdfc-mid-cap-sid
+    title: SID - HDFC Mid Cap Fund (21 Nov 2025)
+    url: "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20Mid%20Cap%20Fund%20dated%20November%2021,%202025_1.pdf"
+    type: sid
+    scheme: HDFC Mid Cap Fund
+
+  # HDFC MF monthly factsheet: only the pages for the four in-scope schemes
+  - id: hdfc-factsheet-jun-2026
+    title: HDFC MF Factsheet - June 2026
+    url: "https://files.hdfcfund.com/s3fs-public/2026-07/HDFC%20MF%20Factsheet%20-%20June%202026.pdf"
+    type: factsheet
+    pages: [7, 8, 11, 12, 13, 14, 61, 62]
+  - id: hdfc-flexi-cap-fund-facts-jun-2026
+    title: Fund Facts - HDFC Flexi Cap Fund (June 2026)
+    url: "https://files.hdfcfund.com/s3fs-public/Others/2026-06/Fund%20Facts%20-%20HDFC%20Flexi%20Cap%20Fund_June%2026.pdf"
+    type: fund_facts
+    scheme: HDFC Flexi Cap Fund
+  - id: hdfc-flexi-cap-scheme-summary
+    title: Scheme Summary Document - HDFC Flexi Cap Fund
+    url: "https://files.hdfcfund.com/s3fs-public/scheme_summary/2026-08/HDFCEQ_1786689286.pdf"
+    type: scheme_summary
+    scheme: HDFC Flexi Cap Fund
+
+  # Groww help: statements and tax documents
+  - id: groww-help-80c-tax-proof
+    title: Groww Help - Where can I get the tax proof for section 80C?
+    url: https://groww.in/help/my-account/ma-others/where-can-i-get-the-tax-proof-for-section-80c
+    type: help
+  - id: groww-help-elss-statement
+    title: Groww Help - What is a mutual funds ELSS report?
+    url: https://groww.in/help/mutual-funds/order/how-to-download-tax-statement--for-elss--77
+    type: help
+  - id: groww-help-cas-cams
+    title: Groww Help - How do I generate my Consolidated Account Statement (CAS) from CAMS?
+    url: https://groww.in/help/mutual-funds/mf-track-and-switch/how-to-generate-my-consolidated-account-statement--cas--from-the-cams-website--60
+    type: help
+  - id: groww-help-redeem-anytime
+    title: Groww Help - Can I withdraw/redeem my investments any time?
+    url: https://groww.in/help/mutual-funds/order/can-i-withdraw-redeem-my-investments-any-time
+    type: help
+  - id: groww-expense-ratio
+    title: Groww - Expense Ratio explained
+    url: https://groww.in/p/expense-ratio
+    type: explainer
+
+  # Regulator / industry body investor education
+  - id: amfi-investor-corner
+    title: AMFI Investor Corner
+    url: https://www.amfiindia.com/investor
+    type: regulator
+  - id: sebi-investor-education
+    title: SEBI Investor Education Reading Material
+    url: https://investor.sebi.gov.in/iematerial.html
+    type: regulator
+  - id: sebi-financial-education-booklet
+    title: SEBI Financial Education Booklet (English)
+    url: https://investor.sebi.gov.in/pdf/downloadable-documents/Financial%20Education%20Booklet%20-%20English.pdf
+    type: regulator

@@ -1,0 +1,22 @@
+httpx
+beautifulsoup4
+lxml
+pypdf
+pyyaml
+pydantic
+pydantic-settings
+python-dotenv
+sentence-transformers
+chromadb
+groq
+streamlit
+pytest
+
+# Optional JS-render fallback for scraping (install Chromium separately):
+# playwright
+
+# Optional LLM providers (install only if LLM_PROVIDER is set to one of these):
+# google-genai
+# openai
+# anthropic
+# mistralai
