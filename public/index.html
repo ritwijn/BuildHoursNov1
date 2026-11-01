@@ -32,7 +32,12 @@
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Keep scrolled-to content clear of the sticky header and the fixed composer. */
+    scroll-padding-top: 76px;
+    scroll-padding-bottom: calc(var(--composer-h, 96px) + 16px);
+  }
   body {
     margin: 0; min-height: 100vh;
     background: var(--canvas); color: var(--text);
@@ -66,7 +71,12 @@
   .icon-link:hover { color: var(--text); border-color: var(--hairline-active); }
   .icon-link svg { width: 15px; height: 15px; }
 
-  main { padding-bottom: 12rem; }
+  main { padding-bottom: calc(var(--composer-h, 96px) + 1.5rem); }
+  .user-msg, .card { scroll-margin-top: 76px; }
+  .turn { display: grid; gap: 1.25rem; align-content: start; }
+  /* The newest exchange is at least one screen tall, so its question can always scroll up
+     under the header while the answer fills in below (no jump when the answer lands). */
+  .turn.latest { min-height: calc(100dvh - 76px - var(--composer-h, 96px) - 1.5rem); }
 
   /* Empty state */
   .intro { text-align: center; padding: 2.5rem 0 1rem; }
@@ -226,9 +236,14 @@
   /* Composer */
   .composer {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
-    background: linear-gradient(to top, var(--canvas) 70%, rgba(14, 17, 22, 0));
-    padding: 1.25rem 0 calc(0.75rem + env(safe-area-inset-bottom));
+    background: var(--canvas);
+    padding: 0.5rem 0 calc(0.6rem + env(safe-area-inset-bottom));
   }
+  .composer::before { /* short fade so content doesn't end in a hard edge */
+    content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 24px;
+    background: linear-gradient(to top, var(--canvas), rgba(14, 17, 22, 0)); pointer-events: none;
+  }
+  .composer-note { margin: 0.4rem 0 0; text-align: center; color: var(--muted); font-size: 0.72rem; }
   .ask-row {
     display: flex; align-items: center; gap: 0.5rem;
     background: var(--surface-low); border: 1px solid var(--hairline); border-radius: 14px;
@@ -251,8 +266,9 @@
   .send:disabled svg { display: none; }
   .send:disabled .spin { display: block; }
   .counter { font-size: 0.75rem; color: var(--muted); padding-right: 0.25rem; }
-  .disclaimer { margin: 0.6rem 0 0; text-align: center; color: var(--muted); font-size: 0.75rem; line-height: 1.5; }
-  .credits { text-align: center; color: var(--muted); font-size: 0.72rem; margin: 0.25rem 0 0; opacity: 0.8; }
+  footer.page-foot { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--hairline); }
+  .disclaimer { margin: 0; text-align: center; color: var(--muted); font-size: 0.78rem; line-height: 1.55; }
+  .credits { text-align: center; color: var(--muted); font-size: 0.72rem; margin: 0.5rem 0 0; opacity: 0.8; }
 
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @keyframes word { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
@@ -315,6 +331,12 @@
   </section>
 
   <section class="thread" id="thread" aria-live="polite" aria-label="Conversation"></section>
+
+  <footer class="page-foot">
+    <p class="disclaimer">This assistant shares publicly available scheme facts only. It is not investment advice, not a
+      recommendation to buy or sell, and not a substitute for the scheme information document, factsheet, or a SEBI-registered adviser.</p>
+    <p class="credits" id="credits"></p>
+  </footer>
 </main>
 
 <div class="composer">
@@ -330,9 +352,7 @@
         </button>
       </div>
     </form>
-    <p class="disclaimer">This assistant shares publicly available scheme facts only. It is not investment advice, not a
-      recommendation to buy or sell, and not a substitute for the scheme information document, factsheet, or a SEBI-registered adviser.</p>
-    <p class="credits" id="credits"></p>
+    <p class="composer-note">Facts-only. No investment advice. Answers cite one official source.</p>
   </div>
 </div>
 
@@ -537,7 +557,6 @@ function leaveIntro() {
   // conversation; the bubble and card provide the entrance motion.
   if (intro.hidden) return;
   intro.hidden = true;
-  scrollTo({ top: 0 });
 }
 
 async function ask(question, openTrace = false) {
@@ -551,8 +570,10 @@ async function ask(question, openTrace = false) {
   const card = el("article", { class: "card" },
     el("div", { class: "skeleton", "aria-hidden": "true" }, el("i"), el("i"), el("i")),
     el("p", { class: "loading-text" }, "Looking through the official sources…"));
-  thread.append(bubble, card);
-  card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  thread.querySelector(".turn.latest")?.classList.remove("latest");
+  thread.append(el("div", { class: "turn latest" }, bubble, card));
+  const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  bubble.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
   let answer;
   try {
     const response = await fetch("/api/ask", {
@@ -581,7 +602,6 @@ async function ask(question, openTrace = false) {
   }
   renderAnswer(card, answer);
   if (openTrace) card.querySelector("details.trace")?.setAttribute("open", "");
-  card.scrollIntoView({ behavior: "smooth", block: "start" });
   button.disabled = false;
   input.focus();
 }
@@ -591,6 +611,9 @@ function updateCounter() {
   counter.hidden = left > 80;
   counter.textContent = `${left}`;
 }
+
+const composer = document.querySelector(".composer");
+new ResizeObserver(() => document.documentElement.style.setProperty("--composer-h", `${composer.offsetHeight}px`)).observe(composer);
 
 form.addEventListener("submit", event => { event.preventDefault(); ask(input.value); });
 input.addEventListener("input", updateCounter);
