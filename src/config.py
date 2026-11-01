@@ -71,6 +71,7 @@ class AnswerConfig(BaseModel):
     returns_source_id: str | None = "hdfc-factsheet-jun-2026"
     fallback_source_id: str = "hdfc-amc"
     last_updated_field: str = "last_ingest_at"
+    llm_advice_check: bool = True
     dump_prompts: bool = False
 
 

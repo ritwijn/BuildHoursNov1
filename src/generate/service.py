@@ -1,6 +1,7 @@
 """answer_question(): the single entry point for the CLI and UI.
 
-question → PII filter → intent → template route (no LLM) or
+question → PII filter → rule intent → template route (no LLM)
+         → LLM advice check (questions the rules let through) → refusal, or
 retrieve → min_score gate → LLM → post-check → Answer
 """
 
@@ -10,6 +11,7 @@ from datetime import datetime
 
 from src.config import Settings, Source, get_settings, load_sources
 from src.generate import prompts
+from src.generate.advice_check import is_advice_request
 from src.generate.intent import classify
 from src.generate.llm import LLMClient, LLMError, get_llm_client
 from src.generate.pii import PII_MESSAGE, detect_pii
@@ -60,6 +62,16 @@ def answer_question(
     if intent.intent == "out_of_scope":
         return Answer(status="out_of_scope", body=prompts.OUT_OF_SCOPE, source_url=fallback_url, **common)
 
+    # Rules can't list every way of asking for advice; let the model judge what they let through.
+    if settings.answer.llm_advice_check:
+        verdict = _advice_check(question, settings, llm)
+        if verdict is True:
+            common["intent"] = "advice"
+            common["flags"].append("matched:language-model check")
+            return Answer(status="refused", body=prompts.REFUSAL, source_url=refusal_url, **common)
+        if verdict is False:
+            common["flags"].append("advice_check:fact")
+
     result = retrieve(question, intent=intent.intent, scheme_id=intent.scheme_id, settings=settings)
     common["query_id"] = result.query_id
     common["hits"] = result.hits
@@ -90,6 +102,15 @@ def answer_question(
     answer.flags.extend(checked.flags)
     answer.flags.append(f"llm:{getattr(client, 'name', 'llm')}:{settings.llm.model}")
     return _logged(answer, settings, raw=raw)
+
+
+def _advice_check(question: str, settings: Settings, llm: LLMClient | None) -> bool | None:
+    """True = advice, False = fact, None = couldn't check (fail open to retrieval)."""
+    try:
+        client = llm or get_llm_client(settings)
+    except LLMError:
+        return None
+    return is_advice_request(question, client)
 
 
 def _logged(answer: Answer, settings: Settings, raw: str | None = None) -> Answer:

@@ -36,6 +36,8 @@ def settings(tmp_path):
         retrieval=RetrievalConfig(min_score=0.35),
         paths=PathsConfig(manifest_file=str(tmp_path / "manifest.json"), retrieval_log_dir=str(tmp_path / "logs")),
     )
+    # The LLM advice check has its own tests below; keep it out of the others' call counts.
+    settings.answer.llm_advice_check = False
     manifest = {"last_ingest_at": "2026-11-01T07:37:49Z", "sources_fetched_at": "2026-10-31T06:56:52Z"}
     (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     return settings
@@ -159,3 +161,56 @@ def test_model_not_found_cites_scheme_or_fallback_not_the_unrelated_top_hit(sett
     answer = ask(question, settings, FakeLLM(reply=reply))
     assert answer.status == "not_found"
     assert answer.source_url == url
+
+
+class ClassifyingLLM(FakeLLM):
+    """Answers the advice check with `verdict`, everything else with the normal fake reply."""
+
+    def __init__(self, verdict, **kwargs):
+        super().__init__(**kwargs)
+        self.verdict = verdict
+
+    def generate(self, messages, *, temperature, max_tokens):
+        if messages[0]["content"].startswith("You classify"):
+            self.calls.append("classify")
+            return self.verdict
+        return super().generate(messages, temperature=temperature, max_tokens=max_tokens)
+
+
+def test_llm_advice_check_refuses_phrasings_the_rules_miss(settings, fake_retrieve):
+    settings.answer.llm_advice_check = True
+    llm = ClassifyingLLM("ADVICE")
+    answer = ask("May I know whether to invest?", settings, llm)
+    assert (answer.status, answer.source_url) == ("refused", "https://investor.sebi.gov.in/ie")
+    assert "matched:language-model check" in answer.flags
+    assert llm.calls == ["classify"] and fake_retrieve == []
+
+
+def test_llm_advice_check_lets_facts_through(settings, fake_retrieve):
+    settings.answer.llm_advice_check = True
+    llm = ClassifyingLLM("FACT")
+    answer = ask("What is the expense ratio of HDFC Large Cap Fund Direct Growth?", settings, llm)
+    assert answer.status == "answered" and "advice_check:fact" in answer.flags
+    assert llm.calls[0] == "classify" and len(llm.calls) == 2
+
+
+@pytest.mark.parametrize("verdict", ["", "I am not sure", None])
+def test_llm_advice_check_fails_open(settings, fake_retrieve, verdict):
+    settings.answer.llm_advice_check = True
+    llm = ClassifyingLLM(verdict or "")
+    answer = ask("What is the expense ratio of HDFC Large Cap Fund Direct Growth?", settings, llm)
+    assert answer.status == "answered"
+
+
+def test_rule_matched_advice_skips_the_llm_check(settings, fake_retrieve):
+    settings.answer.llm_advice_check = True
+    llm = ClassifyingLLM("FACT")
+    assert ask("Should I buy HDFC Flexi Cap?", settings, llm).status == "refused"
+    assert llm.calls == []
+
+
+def test_llm_advice_check_can_be_disabled(settings, fake_retrieve):
+    settings.answer.llm_advice_check = False
+    llm = ClassifyingLLM("ADVICE")
+    assert ask("May I know whether to invest?", settings, llm).status == "answered"
+    assert "classify" not in llm.calls

@@ -446,14 +446,20 @@ function renderExamples(examples) {
 
 function steps(answer) {
   const flags = answer.flags || [];
-  const matched = flags.filter(f => f.startsWith("matched:")).map(f => f.slice(8));
-  const checks = flags.filter(f => !f.startsWith("matched:") && !f.startsWith("llm:") && !f.startsWith("llm_reason:"));
+  const MODEL_CHECK = "language-model check";
+  const matched = flags.filter(f => f.startsWith("matched:")).map(f => f.slice(8)).filter(m => m !== MODEL_CHECK);
+  const byModel = flags.includes(`matched:${MODEL_CHECK}`);
+  const confirmedFact = flags.includes("advice_check:fact");
+  const checks = flags.filter(f => !/^(matched|llm|llm_reason|advice_check):/.test(f));
   const model = flags.find(f => f.startsWith("llm:"));
   const hits = (answer.hits || []).length;
   const list = [
     ["Checked for personal details", "Passed", "No PAN, Aadhaar, phone, email, OTP or account numbers found.", true],
     ["Classified the question", "Done",
-      `Read as a ${ROUTE_NAMES[answer.status] || "question"}${matched.length ? `, matched “${matched.join("”, “")}”` : ""}.`, true],
+      byModel
+        ? "Judged a request for advice by a language-model check."
+        : `Read as a ${ROUTE_NAMES[answer.status] || "question"}${matched.length ? `, matched “${matched.join("”, “")}”` : ""}` +
+          `${confirmedFact ? ", confirmed factual by a language-model check" : ""}.`, true],
   ];
   if (hits) {
     list.push(["Searched the official sources", `Top ${hits}`, "Semantic search over Groww pages, HDFC MF documents, SEBI and AMFI.", true]);

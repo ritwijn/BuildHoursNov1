@@ -41,6 +41,8 @@ answer:
   fallback_source_id: hdfc-amc                     # out-of-scope / weak-match answers
   # Manifest field shown as "Last updated from sources": last_ingest_at | sources_fetched_at
   last_updated_field: last_ingest_at
+  # After the keyword rules, ask the LLM "fact or advice?" for questions they let through
+  llm_advice_check: true
   dump_prompts: false
 
 llm:
