@@ -1,0 +1,12 @@
+{
+  "source_id": "hdfc-flexi-cap-sid",
+  "title": "SID - HDFC Flexi Cap Fund (21 Nov 2025)",
+  "url": "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20Flexi%20Cap%20Fund%20dated%20November%2021,%202025.pdf",
+  "fetched_at": "2026-11-01T08:35:26Z",
+  "http_status": 200,
+  "content_type": "application/pdf",
+  "fetch_method": "http",
+  "text_chars": 200880,
+  "section_count": 74,
+  "error": null
+}

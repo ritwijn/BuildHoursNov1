@@ -1,0 +1,39 @@
+## Key facts
+
+Scheme name: HDFC Large Cap Fund Direct Growth
+Fund house: HDFC Mutual Fund
+Category: Equity
+Sub-category: Large Cap
+Expense ratio: 1.02%
+Exit load: Exit load of 1% if redeemed within 1 year
+Minimum SIP: ₹100
+Minimum lumpsum: ₹100
+Lock-in: None (no lock-in stated)
+Riskometer: Very High
+Benchmark: NIFTY 100 Total Return Index
+AUM: ₹37,293.95 Cr
+Launch date: 01-Jan-2013
+Fund manager: Prashant Jain
+SIP allowed: True
+
+## About HDFC Large Cap Fund Direct Growth
+
+The scheme seeks to provide long-term capital appreciation/income by investing predominantly in Large-Cap companies.
+
+## Exit load history
+
+2015-05-08: Exit load of 1% if redeemed within 1 year
+2015-02-16: Exit load of 1% if redeemed within 18 months
+2013-01-01: Exit load of 1% if redeemed within 1 year
+
+## Understand terms
+
+Average of the yearly returns of a mutual fund over a given period.
+The total return of a mutual fund over a given period.
+
+## Understand terms
+
+A fee payable to a mutual fund house for managing your mutual fund investments. It is the total percentage of a company's fund assets used for administrative, management, advertising, and other expenses.
+A percentage of your capital gains payable to the government upon exiting your mutual fund investments. Taxation is categorized as long-term capital gains (LTCG) and short-term capital gains (STCG) depending on your holding period and the type of fund.
+A fee payable to a mutual fund house for exiting a fund (fully or partially) before the completion of a specified period from the date of investment.
+A form of tax payable for the purchase or sale of an asset or security.

@@ -1,0 +1,12 @@
+{
+  "source_id": "hdfc-mid-cap-sid",
+  "title": "SID - HDFC Mid Cap Fund (21 Nov 2025)",
+  "url": "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20Mid%20Cap%20Fund%20dated%20November%2021,%202025_1.pdf",
+  "fetched_at": "2026-11-01T08:35:34Z",
+  "http_status": 200,
+  "content_type": "application/pdf",
+  "fetch_method": "http",
+  "text_chars": 199020,
+  "section_count": 73,
+  "error": null
+}

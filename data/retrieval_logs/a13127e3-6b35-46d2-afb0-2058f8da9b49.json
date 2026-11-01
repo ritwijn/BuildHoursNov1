@@ -1,0 +1,66 @@
+{
+  "query_id": "a13127e3-6b35-46d2-afb0-2058f8da9b49",
+  "asked_at": "2026-11-01T09:00:19Z",
+  "query": "What is the minimum SIP for HDFC Mid Cap Fund Direct Growth?",
+  "embedded_query": "What is the minimum SIP for HDFC Mid Cap Fund Direct Growth? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": "hdfc-mid-cap-direct-growth",
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.8874,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "hdfc-mid-cap-direct-growth::007",
+      "source_id": "hdfc-mid-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Mid Cap Fund Direct Growth — Key facts\nMinimum SIP: ₹100",
+      "score": 0.8874
+    },
+    {
+      "chunk_id": "hdfc-mid-cap-direct-growth::015",
+      "source_id": "hdfc-mid-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Mid Cap Fund Direct Growth — Key facts\nSIP allowed: True",
+      "score": 0.8322
+    },
+    {
+      "chunk_id": "hdfc-mid-cap-direct-growth::000",
+      "source_id": "hdfc-mid-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Mid Cap Fund Direct Growth — Key facts\nScheme name: HDFC Mid Cap Fund Direct Growth\nFund house: HDFC Mutual Fund\nCategory: Equity\nSub-category: Mid Cap\nExpense ratio: 0.74%\nExit load: Exit load of 1% if redeemed within 1 year.\nMinimum SIP: ₹100\nMinimum lumpsum: ₹100\nLock-in: None (no lock-in stated)\nRiskometer: Very High\nBenchmark: NIFTY Midcap 150 Total Return Index\nAUM: ₹101,856.06 Cr\nLaunch date: 01-Jan-2013\nFund manager: Chirag Setalvad\nSIP allowed: True",
+      "score": 0.7879
+    },
+    {
+      "chunk_id": "hdfc-mid-cap-direct-growth::008",
+      "source_id": "hdfc-mid-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Mid Cap Fund Direct Growth — Key facts\nMinimum lumpsum: ₹100",
+      "score": 0.7848
+    },
+    {
+      "chunk_id": "hdfc-mid-cap-direct-growth::004",
+      "source_id": "hdfc-mid-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Mid Cap Fund Direct Growth — Key facts\nSub-category: Mid Cap",
+      "score": 0.7719
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "The minimum SIP for HDFC Mid Cap Fund Direct Growth is ₹100.",
+    "source_url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:sip",
+      "matched:minimum",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "The minimum SIP for HDFC Mid Cap Fund Direct Growth is ₹100.\nSource: https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth"
+}

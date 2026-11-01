@@ -1,0 +1,65 @@
+{
+  "query_id": "f540154d-8b67-420a-b708-c3150317ecba",
+  "asked_at": "2026-11-01T09:00:19Z",
+  "query": "What is the exit load of HDFC Flexi Cap Direct Plan Growth?",
+  "embedded_query": "What is the exit load of HDFC Flexi Cap Direct Plan Growth? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": "hdfc-flexi-cap-direct-growth",
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.8393,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "hdfc-flexi-cap-direct-growth::006",
+      "source_id": "hdfc-flexi-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Flexi Cap Direct Plan Growth — Key facts\nExit load: Exit load of 1% if redeemed within 1 year",
+      "score": 0.8393
+    },
+    {
+      "chunk_id": "hdfc-flexi-cap-direct-growth::002",
+      "source_id": "hdfc-flexi-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Flexi Cap Direct Plan Growth — Key facts\nFund house: HDFC Mutual Fund",
+      "score": 0.8212
+    },
+    {
+      "chunk_id": "hdfc-flexi-cap-direct-growth::017",
+      "source_id": "hdfc-flexi-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "section": "Exit load history",
+      "text": "HDFC Flexi Cap Direct Plan Growth — Exit load history\n2013-01-01: Exit load of 1% if redeemed within 1 year",
+      "score": 0.8168
+    },
+    {
+      "chunk_id": "hdfc-flexi-cap-direct-growth::013",
+      "source_id": "hdfc-flexi-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Flexi Cap Direct Plan Growth — Key facts\nLaunch date: 01-Jan-2013",
+      "score": 0.8001
+    },
+    {
+      "chunk_id": "hdfc-flexi-cap-direct-growth::003",
+      "source_id": "hdfc-flexi-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Flexi Cap Direct Plan Growth — Key facts\nCategory: Equity",
+      "score": 0.7898
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "The exit load is 1% if redeemed within 1 year.",
+    "source_url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:exit load",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "The exit load is 1% if redeemed within 1 year.\nSource: https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth"
+}

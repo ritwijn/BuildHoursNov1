@@ -1,0 +1,67 @@
+{
+  "query_id": "7efffa0e-4784-44e8-a066-e4ec8b48bf14",
+  "asked_at": "2026-11-01T09:00:18Z",
+  "query": "What is the ELSS lock-in for HDFC ELSS Tax Saver Fund Direct Plan Growth?",
+  "embedded_query": "What is the ELSS lock-in for HDFC ELSS Tax Saver Fund Direct Plan Growth? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": "hdfc-elss-tax-saver-direct-growth",
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.8534,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "hdfc-elss-tax-saver-direct-growth::009",
+      "source_id": "hdfc-elss-tax-saver-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "section": "Key facts",
+      "text": "HDFC ELSS Tax Saver Fund Direct Plan Growth — Key facts\nLock-in: 3 year(s)",
+      "score": 0.8534
+    },
+    {
+      "chunk_id": "hdfc-elss-tax-saver-direct-growth::004",
+      "source_id": "hdfc-elss-tax-saver-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "section": "Key facts",
+      "text": "HDFC ELSS Tax Saver Fund Direct Plan Growth — Key facts\nSub-category: ELSS",
+      "score": 0.8194
+    },
+    {
+      "chunk_id": "hdfc-elss-tax-saver-direct-growth::002",
+      "source_id": "hdfc-elss-tax-saver-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "section": "Key facts",
+      "text": "HDFC ELSS Tax Saver Fund Direct Plan Growth — Key facts\nFund house: HDFC Mutual Fund",
+      "score": 0.7981
+    },
+    {
+      "chunk_id": "hdfc-elss-tax-saver-direct-growth::013",
+      "source_id": "hdfc-elss-tax-saver-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "section": "Key facts",
+      "text": "HDFC ELSS Tax Saver Fund Direct Plan Growth — Key facts\nLaunch date: 01-Jan-2013",
+      "score": 0.7908
+    },
+    {
+      "chunk_id": "hdfc-elss-tax-saver-direct-growth::001",
+      "source_id": "hdfc-elss-tax-saver-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "section": "Key facts",
+      "text": "HDFC ELSS Tax Saver Fund Direct Plan Growth — Key facts\nScheme name: HDFC ELSS Tax Saver Fund Direct Plan Growth",
+      "score": 0.7886
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "The lock-in period for HDFC ELSS Tax Saver Fund Direct Plan Growth is 3 year(s).",
+    "source_url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:lock-in",
+      "matched:lock in",
+      "matched:elss",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "The lock-in period for HDFC ELSS Tax Saver Fund Direct Plan Growth is 3 year(s).\nSource: https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth"
+}

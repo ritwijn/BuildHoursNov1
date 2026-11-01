@@ -1,0 +1,66 @@
+{
+  "query_id": "4d12334e-aa92-46ff-92ae-b42e6af1f391",
+  "asked_at": "2026-11-01T09:00:19Z",
+  "query": "What is the riskometer / benchmark of HDFC Large Cap Fund Direct Growth?",
+  "embedded_query": "What is the riskometer / benchmark of HDFC Large Cap Fund Direct Growth? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": "hdfc-large-cap-direct-growth",
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.8454,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::010",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nRiskometer: Very High",
+      "score": 0.8454
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::011",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nBenchmark: NIFTY 100 Total Return Index",
+      "score": 0.8158
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::013",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nLaunch date: 01-Jan-2013",
+      "score": 0.7781
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::002",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nFund house: HDFC Mutual Fund",
+      "score": 0.7731
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::000",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nScheme name: HDFC Large Cap Fund Direct Growth\nFund house: HDFC Mutual Fund\nCategory: Equity\nSub-category: Large Cap\nExpense ratio: 1.02%\nExit load: Exit load of 1% if redeemed within 1 year\nMinimum SIP: ₹100\nMinimum lumpsum: ₹100\nLock-in: None (no lock-in stated)\nRiskometer: Very High\nBenchmark: NIFTY 100 Total Return Index\nAUM: ₹37,293.95 Cr\nLaunch date: 01-Jan-2013\nFund manager: Prashant Jain\nSIP allowed: True",
+      "score": 0.7702
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "The riskometer for HDFC Large Cap Fund Direct Growth is Very High, and its benchmark is the NIFTY 100 Total Return Index.",
+    "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:riskometer",
+      "matched:benchmark",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "The riskometer for HDFC Large Cap Fund Direct Growth is Very High, and its benchmark is the NIFTY 100 Total Return Index.\nSource: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth"
+}

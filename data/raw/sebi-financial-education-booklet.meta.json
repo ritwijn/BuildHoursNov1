@@ -1,0 +1,12 @@
+{
+  "source_id": "sebi-financial-education-booklet",
+  "title": "SEBI Financial Education Booklet (English)",
+  "url": "https://investor.sebi.gov.in/pdf/downloadable-documents/Financial%20Education%20Booklet%20-%20English.pdf",
+  "fetched_at": "2026-11-01T08:35:50Z",
+  "http_status": 200,
+  "content_type": "application/pdf",
+  "fetch_method": "http",
+  "text_chars": 128754,
+  "section_count": 72,
+  "error": null
+}

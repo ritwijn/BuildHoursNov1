@@ -1,0 +1,65 @@
+{
+  "query_id": "403f4252-ae85-4bca-b745-a3598fac3fc1",
+  "asked_at": "2026-11-01T09:00:18Z",
+  "query": "What is the expense ratio of HDFC Large Cap Fund Direct Growth?",
+  "embedded_query": "What is the expense ratio of HDFC Large Cap Fund Direct Growth? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": "hdfc-large-cap-direct-growth",
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.8909,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::005",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nExpense ratio: 1.02%",
+      "score": 0.8909
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::003",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nCategory: Equity",
+      "score": 0.8082
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::002",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nFund house: HDFC Mutual Fund",
+      "score": 0.8052
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::004",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nSub-category: Large Cap",
+      "score": 0.8
+    },
+    {
+      "chunk_id": "hdfc-large-cap-direct-growth::012",
+      "source_id": "hdfc-large-cap-direct-growth",
+      "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+      "section": "Key facts",
+      "text": "HDFC Large Cap Fund Direct Growth — Key facts\nAUM: ₹37,293.95 Cr",
+      "score": 0.7955
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "The expense ratio of HDFC Large Cap Fund Direct Growth is 1.02%.",
+    "source_url": "https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:expense ratio",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "The expense ratio of HDFC Large Cap Fund Direct Growth is 1.02%.\nSource: https://groww.in/mutual-funds/hdfc-large-cap-fund-direct-growth"
+}

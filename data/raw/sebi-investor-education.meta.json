@@ -1,0 +1,12 @@
+{
+  "source_id": "sebi-investor-education",
+  "title": "SEBI Investor Education Reading Material",
+  "url": "https://investor.sebi.gov.in/iematerial.html",
+  "fetched_at": "2026-11-01T08:35:49Z",
+  "http_status": 200,
+  "content_type": "text/html; charset=UTF-8",
+  "fetch_method": "http",
+  "text_chars": 2604,
+  "section_count": 16,
+  "error": null
+}

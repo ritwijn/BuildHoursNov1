@@ -1,0 +1,66 @@
+{
+  "query_id": "6a82e9dd-b7c9-403c-bb47-e64be1783018",
+  "asked_at": "2026-11-01T09:00:20Z",
+  "query": "How do I download a capital-gains statement?",
+  "embedded_query": "How do I download a capital-gains statement? (mutual funds)",
+  "intent": "factual",
+  "scheme_id": null,
+  "top_k": 5,
+  "min_score": 0.35,
+  "best_score": 0.6135,
+  "below_threshold": false,
+  "hits": [
+    {
+      "chunk_id": "groww-help-80c-tax-proof::000",
+      "source_id": "groww-help-80c-tax-proof",
+      "source_url": "https://groww.in/help/my-account/ma-others/where-can-i-get-the-tax-proof-for-section-80c",
+      "section": "Where can I get the tax proof for section 80C?",
+      "text": "Groww Help - Where can I get the tax proof for section 80C? — Where can I get the tax proof for section 80C?\nYou can request your tax proof for Section 80C by downloading the Mutual Fund-ELSS statement.\nSteps to request your ELSS Statement:\nGo to your profile.\nSelect the 'Reports' option.\nUnder 'Tax', find 'Mutual Fund - Capital Gains'.\nChoose the financial year and click 'Download'.\nClick the button below to go directly to the 'Reports' section.",
+      "score": 0.6135
+    },
+    {
+      "chunk_id": "groww-help-elss-statement::000",
+      "source_id": "groww-help-elss-statement",
+      "source_url": "https://groww.in/help/mutual-funds/order/how-to-download-tax-statement--for-elss--77",
+      "section": "What is a mutual funds ELSS report?",
+      "text": "Groww Help - What is a mutual funds ELSS report? — What is a mutual funds ELSS report?\nThe ELSS (Equity Linked Savings Scheme) report shows your purchases in ELSS mutual funds and the total amount you invested in the selected financial year.\nHere's how you can download it:\nGo to your profile.\nSelect the 'Reports' option.\nUnder 'Tax', find 'Mutual Fund - ELSS statement'.\nClick on 'Download'.\nNote: The password to open the report is your PAN number in capital letters.",
+      "score": 0.55
+    },
+    {
+      "chunk_id": "hdfc-elss-sid::287",
+      "source_id": "hdfc-elss-sid",
+      "source_url": "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20ELSS%20Tax%20Saver%20dated%20November%2021,%202025.pdf",
+      "section": "Page 68",
+      "text": "SID - HDFC ELSS Tax Saver (21 Nov 2025) — Page 68\nAct, 1961 nor does it constitute tax or legal advice. Investors should be aware th at the fiscal rules/\ntax laws may change and there can be no guarantee that the current tax position may continue\nindefinitely. The information/ data herein alone is not sufficient and shouldn’t be used or should not\nbe construed as any advice. In view of the individual nature of tax implications, investors should\nmake his/her/their own investigation and/or are advised to consult their professional tax advisor. For\nfurther details on taxation, please refer to the Section on Taxation on investing in Mutual Funds in\nStatement of Additional Information {SAI}.",
+      "score": 0.5394
+    },
+    {
+      "chunk_id": "hdfc-amc::030",
+      "source_id": "hdfc-amc",
+      "source_url": "https://groww.in/mutual-funds/amc/hdfc-mutual-funds",
+      "section": "Key information about HDFC Mutual Fund",
+      "text": "HDFC Mutual Fund (AMC overview) — Key information about HDFC Mutual Fund\nMD: Mr. Navneet Munot",
+      "score": 0.4944
+    },
+    {
+      "chunk_id": "hdfc-elss-sid::231",
+      "source_id": "hdfc-elss-sid",
+      "source_url": "https://files.hdfcfund.com/s3fs-public/SID/2025-11/SID%20-%20HDFC%20ELSS%20Tax%20Saver%20dated%20November%2021,%202025.pdf",
+      "section": "Page 55",
+      "text": "SID - HDFC ELSS Tax Saver (21 Nov 2025) — Page 55\nnationwide circulation as well as in a newspaper published in the\nlanguage of the region where the head office of the Mutual Fund is\nsituated.\n3. The Record Date will be 2 working days from the date of publication in at\nleast one English newspaper or in a newspaper published in the\nlanguage of the region where the Head Office of the mutual fund is\nsituated, whichever is issued earlier. Record date shall be the date which\nwill be considered for the purpose of determining the eligibility of\ninvestors whose names appear on the register of Unit holders maintained\nby the Mutual Fund/ statement of beneficial ownership maintained by the\nDepositories, as applicable, for receiving IDCW.\n4. The notice will, in font size 10, bold, categorically state that pursuant to",
+      "score": 0.4938
+    }
+  ],
+  "answer": {
+    "status": "answered",
+    "body": "Go to your profile and select the 'Reports' option. Under 'Tax', find 'Mutual Fund - Capital Gains', choose the financial year, and click 'Download'.",
+    "source_url": "https://groww.in/help/my-account/ma-others/where-can-i-get-the-tax-proof-for-section-80c",
+    "last_updated": "1 Nov 2026",
+    "flags": [
+      "matched:statement",
+      "matched:capital gains",
+      "llm:groq:qwen/qwen3.8-27b"
+    ]
+  },
+  "llm_raw": "Go to your profile and select the 'Reports' option. Under 'Tax', find 'Mutual Fund - Capital Gains', choose the financial year, and click 'Download'.\nSource: https://groww.in/help/my-account/ma-others/where-can-i-get-the-tax-proof-for-section-80c"
+}

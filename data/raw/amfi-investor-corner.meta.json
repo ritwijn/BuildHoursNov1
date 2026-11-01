@@ -1,0 +1,12 @@
+{
+  "source_id": "amfi-investor-corner",
+  "title": "AMFI Investor Corner",
+  "url": "https://www.amfiindia.com/investor",
+  "fetched_at": "2026-11-01T08:35:47Z",
+  "http_status": 200,
+  "content_type": "text/html; charset=utf-8",
+  "fetch_method": "http",
+  "text_chars": 325,
+  "section_count": 4,
+  "error": null
+}

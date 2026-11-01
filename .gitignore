@@ -9,14 +9,11 @@ __pycache__/
 .ruff_cache/
 .streamlit/
 
-data/raw/*
-!data/raw/.gitkeep
-data/chunks/*
-!data/chunks/.gitkeep
+# Stage artifacts: raw pages, chunks, embeddings and the manifest are committed as a
+# snapshot for reviewers. Chroma is rebuilt locally with `python -m src.cli ingest --no-scrape`.
+# Retrieval logs are runtime output; only the ones cited in Docs/sample_qa.md are force-added.
+*.tmp
 data/chroma/*
 !data/chroma/.gitkeep
-data/embeddings/*
-!data/embeddings/.gitkeep
 data/retrieval_logs/*
 !data/retrieval_logs/.gitkeep
-data/ingest_manifest.json

@@ -1,0 +1,93 @@
+## Page 1
+
+Page 1
+Fields SCHEME SUMMARY DOCUMENT
+1 Fund Name HDFC Flexi Cap Fund
+2 Option Names (Regular & Direct)
+Plans:Regular and Direct. Each Plan oﬀers the following sub-options: a)Growth Option. b)Income Distribution cum Capital
+Withdrawal (IDCW) Option. This Option oﬀers following Sub-Options / facilities: • Payout of Income Distribution cum Capital
+Withdrawal (IDCW) Option / facility and • Re-investment of Income Distribution cum Capital Withdrawal (IDCW) Option / facility.
+3 Fund Type An open ended dynamic equity scheme investing across Large Cap, Mid Cap, Small Cap Stocks
+4 Riskometer (At the time ofLaunch) Not Available
+5 Riskometer (as on Date) Very High Risk
+6 Category as Per SEBICategorization Circular Flexi Cap Fund
+7 Potential Risk Class (as on date) Not applicable
+8 Description, Objective of thescheme To generate capital appreciation / income from a portfolio, predominantly invested in equity & equity related instruments. Thereis no assurance that the investment objective of the Scheme will be achieved.
+9 Stated Asset Allocation
+Equity and Equity Related Instruments: 65% - 100% Debt Securities and money market instruments and Fixed Income Derivatives:
+0% -35% Units issued by InvITs: 0% - 10% Non-convertible preference shares: 0% - 10% Unit of Mutual Fund: 0% - 20% For
+detailed asset allocation, refer Scheme Information Document (SID) available on the website.
+10 Face Value Rs. 10.
+11 NFO Open Date December 8, 1994
+12 NFO Close date December 24, 1994
+13 Allotment Date January 1, 1995
+14 Reopen Date Not Available
+15 Maturity Date (For closed-endfunds) Not applicable
+16 Benchmark (Tier 1) NIFTY 500 Index (Total Returns Index)
+17 Benchmark (Tier 2) Not applicable
+18 Fund Manager Name FM 1 - Mr. Amit Ganatra , FM 2 - Mr. Dhruv Muchhal
+19 Fund Manager Type(Primary/Comanage/Description) FM 1 - Fund Manager of the Scheme, FM 2 - Dedicated Fund Manager for Overseas Investments
+20 Fund Manager From Date FM 1 - Managing Since February 01, 2026 , FM 2 - Managing Since June 22, 2023
+21 Annual Expense (Statedmaximum) Regular 1.37, Direct 0.74
+22 Exit Load (if applicable) In respect of each purchase/switch-in of units, an Exit Load of 1.00% is payable if Units are edeemed/switched-out within 1 yearfrom the date of allotment. No Exit Load is payable if Units are redeemed/ switched-out after 1 year from the date of allotment.
+23 Custodian Citibank N.A
+24 Auditor S.R. Batliboi & Co. LLP – Chartered Accountants
+25 Registrar Computer Age Management Services Limited
+26 RTA Code (To be phased out) HDFCEQ
+27 Listing Details Not applicable
+28 ISINs
+HDFC FLEXI CAP FUND - DIRECT PLAN - DIVIDEND REINVESTMENT OPTION- INF179K01VM3 HDFC FLEXI CAP FUND - DIRECT PLAN
+- DIVIDEND PAYOUT OPTION-INF179K01VL5 HDFC FLEXI CAP FUND - DIRECT PLAN - GROWTH OPTION- INF179K01UT0 HDFC FLEXI
+CAP FUND - DIVIDEND PAYOUT OPTION- INF179K01582 HDFC FLEXI CAP FUND - DIVIDEND REINVESTMENT OPTION-
+INF179K01590 HDFC FLEXI CAP FUND - GROWTH OPTION - INF179K01608
+29 AMFI Codes (To be phased out) 101763 -HDFC Flexi Cap Fund - IDCW Plan 118954 -HDFC Flexi Cap Fund - IDCW Option - Direct Plan 101762 -HDFC Flexi Cap Fund- Growth Plan 118955 -HDFC Flexi Cap Fund - Growth Option - Direct Plan
+30 SEBI Codes HDFC/O/E/FCF/94/12/0002
+31 Minimum Application Amount Rs.100
+32 Minimum Application Amount inmultiples of Rs. Any amount
+33 Minimum Additional Amount Rs.100
+34 Minimum Additional Amount inmultiples of Rs. Any amount
+35 Minimum Redemption Amount inRs. Rs.100 and and multiples of Rs.1 thereafter
+36 Minimum Redemption Amount inUnits No minimum redemption criterion for Unit based redemption
+37 Minimum Balance Amount (ifapplicable) There is no minimum balance amount requirement.
+38 Minimum Balance Amount inUnits (if applicable) There is no minimum balance amount in units requirement.
+39 Max Investment Amount Not Applicable
+40 Minimum Switch Amount (ifapplicable) Switch - in: Rs.100 and any amount thereafter. Additional Amount:. Rs. 100 Switch-out :Rs. 100 and multiples of Rs. 1/- thereafter
+41 Minimum Switch Units Not applicable
+42 Switch Multiple Amount (ifapplicable) Any amount
+43 Switch Multiple Units (ifapplicable) N.A
+44 Max Switch Amount Switch in: Not Applicable Switch out: Not applicable.
+45 Max Switch Units (if applicable) Switch in: Not Applicable. Switch out: Not applicable.
+46 Swing Pricing (if applicable) Not applicable
+47 Side-pocketing (if applicable) Not Applicable.
+48 SIP SWP & STP Details: Frequency
+For Systematic Investmet Plan (SIP) Daily, Weekly, Monthly, Quarterly, Half Yearly and Yearly For Systematic Withdrawal Advantage
+Plan (SWAP) Fixed SWAP - Monthly, Quarterly, Half Yearly, Yearly Variable SWAP - Quarterly, Half Yearly, Yearly For Sytematic
+Transfer Plan (STP) Fixed Systematic Transfer Plan (FSTP) - Daily, Weekly, Monthly, Quarterly Capital Appreciation Systematic
+Transfer Plan (CASTP) - Monthly, Quarterly
+49 SIP SWP & STP Details: Minimumamount For SIP DSIP, WSIP, MSIP - Rs. 100; QSIP - Rs. 1500; HSIP - Rs. 2500; YSIP - Rs. 5000. For SWAP Fixed SWAP - Rs. 100; Variable SWAP- Rs. 300. For STP Fixed STP (FSTP) Daily FSTP - Rs. 500; Weekly FSTP - Rs. 500; Monthly FSTP - Rs. 1000; Quarterly FSTP -Rs. 3000.Capital Appreciation STP (CASTP) Monthly CASTP - Rs. 300; Quarterly CASTP - Rs 1000.
+50 SIP SWP & STP Details: In multipleof For SIP and SWAP Re. 1/- thereafter; For STP FSTP Daily, Monthly, Quarterly FSTP - Rs. 100 thereafter Weekly FSTP - any amountthereafter CASTP Mulitples will be based on the appreciated amount
+
+## Page 2
+
+Page 2Fields SCHEME SUMMARY DOCUMENT
+51 SIP SWP & STP Details: MinimumInstalments
+SIP: Minimum number of installments under DSIP- 2 Minimum number of Installments under WSIP and MSIP : - In respect of each
+SIP Installment between Rs.300 to Rs.499 in value - 20 - In respect of each SIP Installment between Rs.500 to Rs.999 in value - 12.
+In respect of each SIP Installment equal to or greater than Rs 1,000 in value - 6 Minimum number of installments under QSIP : - In
+respect of each SIP Installment between Rs.1,500 to Rs.2,999 in value- 4; In respect of each SIP Installment equal to or greater
+than Rs. 3,000 in value- 2 Minimum number of installments under HYSIP: - In respect of each SIP Installment equal to or greater
+than Rs. 2,500 in value- 2 Minimum number of installments under YSIP: - In respect of each SIP Installment equal to or greater
+than Rs. 5,000 in value- 1 SWP: For Fixed and Variable SWP- 2 STP: Under Daily FSTP: -where installment amount is less than Rs.
+1,000 : 12 - where installment amount is equal to or greater than Rs. 1,000: 6 Under Weekly STP : - Where installment amount is
+less than Rs. 1,000: 12 installments - Where installment amount is equal to or greater than Rs. 1,000: 6 installments However, for
+weekly STP in equity linked savings schemes, there should be a minimum of 6 installments for enrollment. Under Monthly FSTP &
+Monthly CASTP : - Minimum 6 installments, Under Quarterly FSTP & Quarterly CASTP : - Minimum 2 installments. Further, the
+minimum balance in the Unit holders account or the minimum amount of application at the time of enrolment for STP in the
+Transferor Scheme should be Rs. 12,000. There will be no maximum duration for STP enrolment.
+52 SIP SWP & STP Details: Dates
+SIP: For Daily SIP- All Business Days For Weekly SIP- Any business day between Monday to Friday, (Default date is Wednesday) For
+all other frequnecies - Any date fo the month. If it happens to be a non-Business Day, SIP will be processed on the next Business
+Day (Default date = 10th of the month) SWP: For Fixed and Variable SWP- Any date. Default Date: 25th STP For Daily FSTP- All
+Business days For Weekly FSTP-Monday,Tuesday,Wednesday,Thursday,Friday (Default Day) For Monthly FSTP and CASTP -
+1,5,10#,15,20,25 For Quarterly FSTP and CASTP - 1,5,10#,15,20,25 #Default Date
+53 SIP SWP & STP Details: MaximumAmount (if any) Not Applicable

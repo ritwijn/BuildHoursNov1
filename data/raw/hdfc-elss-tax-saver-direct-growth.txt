@@ -1,0 +1,33 @@
+## Key facts
+
+Scheme name: HDFC ELSS Tax Saver Fund Direct Plan Growth
+Fund house: HDFC Mutual Fund
+Category: Equity
+Sub-category: ELSS
+Expense ratio: 1.2%
+Exit load: Nil
+Minimum SIP: ₹500
+Minimum lumpsum: ₹500
+Lock-in: 3 year(s)
+Riskometer: Very High
+Benchmark: NIFTY 500 Total Return Index
+AUM: ₹14,948.74 Cr
+Launch date: 01-Jan-2013
+Fund manager: Vinay Kulkarni
+SIP allowed: True
+
+## About HDFC ELSS Tax Saver Fund Direct Plan Growth
+
+The scheme seeks to generate capital appreciation / income from a portfolio, comprising predominantly of equity & equity related instruments.
+
+## Understand terms
+
+Average of the yearly returns of a mutual fund over a given period.
+The total return of a mutual fund over a given period.
+
+## Understand terms
+
+A fee payable to a mutual fund house for managing your mutual fund investments. It is the total percentage of a company's fund assets used for administrative, management, advertising, and other expenses.
+A percentage of your capital gains payable to the government upon exiting your mutual fund investments. Taxation is categorized as long-term capital gains (LTCG) and short-term capital gains (STCG) depending on your holding period and the type of fund.
+A fee payable to a mutual fund house for exiting a fund (fully or partially) before the completion of a specified period from the date of investment.
+A form of tax payable for the purchase or sale of an asset or security.
