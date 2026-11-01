@@ -3,91 +3,280 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HDFC MF Facts Assistant</title>
-<meta name="description" content="Facts-only answers about HDFC Mutual Fund schemes on Groww, with one official source per answer.">
+<title>Fund Facts, with the Source Attached</title>
+<meta name="description" content="Ask a factual question about four HDFC Mutual Fund schemes on Groww. Every answer quotes one official source.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400;0,600;0,800;1,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Passbook: sage ruled paper, navy ink, a red margin rule, violet stamp ink. */
   :root {
-    --bg: #f6f7f9; --panel: #ffffff; --text: #16191d; --muted: #5d6670; --line: #e3e6ea;
-    --accent: #0b7a5c; --accent-soft: #e6f4ef; --warn: #8a5a00; --warn-soft: #fff4dc;
-    --err: #a1262c; --err-soft: #fdecec; --code: #f1f3f5;
+    --paper: #e8eee4;
+    --sheet: #f5f8f2;
+    --ink: #1c2b4a;
+    --ink-soft: #4d5b74;
+    --rule: #b9cdb5;
+    --margin: #c4626b;
+    --stamp: #7a2e5c;
+    --amber: #9a6a12;
+    --amber-wash: #f6ead0;
+    --focus: #2f5bd3;
+    --serif: "Besley", "Clarendon", "Rockwell", Georgia, serif;
+    --sans: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+    --lh: 1.75rem; /* ruled-line pitch of an answer slip */
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #111417; --panel: #1a1e22; --text: #e8eaed; --muted: #9aa3ad; --line: #2b3137;
-      --accent: #3ccb9b; --accent-soft: #15322a; --warn: #f0c060; --warn-soft: #33290f;
-      --err: #ff8a8f; --err-soft: #3a1a1c; --code: #23292e;
+      --paper: #121b2b;
+      --sheet: #182337;
+      --ink: #e4ebe0;
+      --ink-soft: #a6b3c5;
+      --rule: #2a3a52;
+      --margin: #c96c76;
+      --stamp: #d79ac0;
+      --amber: #e2b45a;
+      --amber-wash: #2c2615;
+      --focus: #8fb0ff;
       color-scheme: dark;
     }
   }
+
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-         font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
-  h1 { font-size: 1.6rem; margin: 0 0 6px; letter-spacing: -0.01em; }
-  .welcome { color: var(--muted); margin: 0 0 16px; }
-  .note { display: inline-block; background: var(--accent-soft); color: var(--accent);
-          font-weight: 600; padding: 6px 12px; border-radius: 999px; margin-bottom: 20px; }
-  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
-  .examples button { background: var(--panel); color: var(--text); border: 1px solid var(--line);
-          border-radius: 10px; padding: 8px 12px; font: inherit; font-size: 0.9rem; cursor: pointer; text-align: left; }
-  .examples button:hover { border-color: var(--accent); }
-  form { display: flex; gap: 8px; margin-bottom: 24px; }
-  input[type=text] { flex: 1; min-width: 0; padding: 12px 14px; font: inherit; color: var(--text);
-          background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
-  input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  form button { padding: 0 18px; font: inherit; font-weight: 600; border: 0; border-radius: 10px;
-          background: var(--accent); color: #fff; cursor: pointer; }
-  form button:disabled { opacity: 0.55; cursor: wait; }
-  .thread { display: flex; flex-direction: column-reverse; gap: 16px; }
-  .turn { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
-  .question { font-weight: 600; margin: 0 0 10px; }
-  .question.redacted { color: var(--muted); font-style: italic; font-weight: 400; }
-  .body { margin: 0 0 10px; }
-  .body.warn { background: var(--warn-soft); color: var(--warn); padding: 10px 12px; border-radius: 8px; }
-  .body.err { background: var(--err-soft); color: var(--err); padding: 10px 12px; border-radius: 8px; }
-  .meta { font-size: 0.9rem; margin: 2px 0; overflow-wrap: anywhere; }
-  .meta a { color: var(--accent); }
-  .pending { color: var(--muted); }
-  details { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
-  summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; }
-  .pipe { font-size: 0.85rem; margin-top: 10px; }
-  .pipe p { margin: 4px 0; }
-  .chips code { background: var(--code); padding: 1px 6px; border-radius: 6px; margin-right: 4px; display: inline-block; margin-bottom: 4px; }
-  .table-wrap { overflow-x: auto; margin: 8px 0; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 600; }
-  pre { background: var(--code); padding: 10px; border-radius: 8px; overflow-x: auto;
-        white-space: pre-wrap; font-size: 0.78rem; max-height: 320px; }
-  footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
-  .status-line { margin-top: 8px; }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 1rem/1.55 var(--sans);
+  }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .page {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.25rem 4rem;
+  }
+
+  /* Masthead */
+  .scope { font-size: 0.875rem; color: var(--ink-soft); margin: 0 0 1.75rem; }
+  .scope strong { color: var(--ink); font-weight: 600; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(2.25rem, 6vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.25rem;
+    max-width: 14ch;
+  }
+  .lede { font-size: 1.0625rem; max-width: 36rem; margin: 0 0 1.5rem; color: var(--ink-soft); }
+  .note {
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    margin: 0 0 2.25rem;
+    padding-left: 0.875rem;
+    border-left: 3px solid var(--margin);
+  }
+
+  /* Question box */
+  .ask { margin-bottom: 1.25rem; }
+  .ask label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+  .ask-row {
+    display: flex;
+    background: var(--sheet);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .ask-row:focus-within { box-shadow: 3px 3px 0 var(--focus); border-color: var(--focus); }
+  .ask input {
+    flex: 1; min-width: 0;
+    border: 0; background: transparent; color: var(--ink);
+    font: 400 1.0625rem var(--sans);
+    padding: 0.95rem 1rem;
+  }
+  .ask input::placeholder { color: var(--ink-soft); opacity: 0.8; }
+  .ask input:focus { outline: none; }
+  .ask button {
+    border: 0; border-left: 1.5px solid var(--ink);
+    background: var(--ink); color: var(--sheet);
+    font: 600 1rem var(--sans);
+    padding: 0 1.4rem;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  .ask button:disabled { opacity: 0.6; cursor: progress; }
+
+  .examples { margin: 0 0 3rem; }
+  .examples p { font-size: 0.875rem; color: var(--ink-soft); margin: 0 0 0.5rem; }
+  .examples ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+  .examples button {
+    background: none; border: 0; padding: 0.15rem 0; color: var(--ink);
+    font: 400 0.975rem var(--serif); text-align: left; cursor: pointer;
+    text-decoration: underline; text-decoration-color: var(--rule);
+    text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  .examples button:hover { text-decoration-color: var(--ink); }
+
+  /* Answer slips: the one bold element */
+  .thread { display: grid; gap: 1.75rem; }
+  .slip {
+    position: relative;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    box-shadow: 0 1px 0 var(--rule), 0 10px 24px -18px rgba(28, 43, 74, 0.45);
+    animation: print 280ms ease-out;
+  }
+  @keyframes print {
+    from { transform: translateY(-6px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  .entry {
+    position: relative;
+    /* Padding is a whole number of lines, so each rule lands under a line of text. */
+    /* +6px drops each text line onto its rule instead of floating mid-line. */
+    padding: calc(var(--lh) + 6px) 1.5rem calc(var(--lh) - 6px) 3.25rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent calc(var(--lh) - 1px),
+      var(--rule) calc(var(--lh) - 1px), var(--rule) var(--lh));
+    background-position: 0 0;
+  }
+  .entry::before { /* passbook margin rule */
+    content: ""; position: absolute; top: 0; bottom: 0; left: 2.25rem;
+    border-left: 1.5px solid var(--margin); opacity: 0.7;
+  }
+  .question {
+    font: 600 0.9375rem/var(--lh) var(--sans);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .question.redacted { font-style: italic; font-weight: 400; }
+  .answer {
+    font: 400 1.25rem/var(--lh) var(--serif);
+    margin: 0;
+    max-width: 34rem;
+  }
+  .answer.pending { color: var(--ink-soft); font-style: italic; }
+  .stamp {
+    position: absolute; top: 0.9rem; right: 1rem;
+    font: 600 0.8125rem/1 var(--serif); font-style: italic;
+    color: var(--stamp);
+    border: 2px solid currentColor; border-radius: 4px;
+    padding: 0.35rem 0.55rem;
+    transform: rotate(-4deg);
+    background: var(--sheet);
+  }
+  .slip.warn .answer { color: var(--amber); }
+  .slip.warn .stamp { color: var(--amber); }
+
+  /* Tear-off source stub */
+  .stub {
+    position: relative;
+    border-top: 2px dashed var(--rule);
+    padding: 1rem 1.5rem 1.1rem 3.25rem;
+    display: grid; gap: 0.2rem;
+    font-size: 0.9rem;
+  }
+  .stub::before, .stub::after { /* punched notches at both ends of the perforation */
+    content: ""; position: absolute; top: -9px; width: 16px; height: 16px;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 50%;
+  }
+  .stub::before { left: -9px; }
+  .stub::after { right: -9px; }
+  .stub .source-name { font: 600 1rem/1.35 var(--serif); }
+  .stub .source-url { color: var(--ink-soft); overflow-wrap: anywhere; font-size: 0.85rem; }
+  .stub .updated { color: var(--ink-soft); }
+
+  /* How the answer was found */
+  details.trace { border-top: 1px solid var(--rule); }
+  details.trace > summary {
+    cursor: pointer; list-style: none;
+    padding: 0.75rem 1.5rem 0.75rem 3.25rem;
+    font-size: 0.875rem; font-weight: 500; color: var(--ink-soft);
+  }
+  details.trace > summary::-webkit-details-marker { display: none; }
+  details.trace > summary::before { content: "+ "; font-weight: 600; }
+  details.trace[open] > summary::before { content: "− "; }
+  .trace-body { padding: 0 1.5rem 1.25rem 3.25rem; font-size: 0.875rem; }
+  .steps { margin: 0 0 1rem; padding-left: 1.25rem; display: grid; gap: 0.4rem; }
+  .steps li::marker { font-family: var(--serif); font-weight: 600; }
+  .steps .detail { color: var(--ink-soft); }
+  .passages { display: grid; gap: 0.75rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+  .passage { border-left: 2px solid var(--rule); padding-left: 0.75rem; }
+  .passage .head { display: flex; gap: 0.75rem; align-items: baseline; flex-wrap: wrap; }
+  .passage .section { font-weight: 600; }
+  .passage .score { font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .bar { height: 3px; background: var(--rule); border-radius: 2px; margin: 0.3rem 0; max-width: 16rem; }
+  .bar span { display: block; height: 100%; background: var(--ink); border-radius: 2px; }
+  .passage .preview { color: var(--ink-soft); margin: 0; }
+  .passage .from { font-size: 0.8rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+  details.prompt summary { cursor: pointer; color: var(--ink-soft); }
+  details.prompt pre {
+    white-space: pre-wrap; font-size: 0.78rem; max-height: 20rem; overflow: auto;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; padding: 0.75rem;
+  }
+
+  footer {
+    margin-top: 4rem; padding-top: 1.25rem;
+    border-top: 1.5px solid var(--ink);
+    font-size: 0.875rem; color: var(--ink-soft);
+    display: grid; gap: 0.75rem;
+  }
+  footer .disclaimer { font-family: var(--serif); font-size: 0.95rem; color: var(--ink); margin: 0; max-width: 38rem; }
+  footer p { margin: 0; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (max-width: 34rem) {
+    .page { padding-top: 2.25rem; }
+    .entry { padding-left: 2.25rem; padding-right: 1rem; }
+    .entry::before { left: 1.35rem; }
+    .stub, .trace-body, details.trace > summary { padding-left: 2.25rem; padding-right: 1rem; }
+    .stamp { position: static; display: inline-block; margin: 0 0 0.25rem; transform: rotate(-2deg); }
+    .answer { font-size: 1.125rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slip { animation: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>HDFC Mutual Fund Facts Assistant</h1>
-  <p class="welcome">Ask about publicly listed facts for HDFC Mutual Fund schemes on Groww: expense ratio,
-    exit load, minimum SIP, lock-in, riskometer, benchmark, fund manager, and how to download statements.</p>
-  <div class="note" role="note">Facts-only. No investment advice.</div>
+<main class="page">
+  <p class="scope">Covers <strong>HDFC Mutual Fund</strong> on Groww: Large Cap, Flexi Cap, ELSS Tax Saver and Mid Cap funds, from 24 official pages.</p>
 
-  <div class="examples" id="examples" aria-label="Example questions"></div>
+  <h1>Fund facts, with the source attached.</h1>
+  <p class="lede">Ask about an expense ratio, exit load, minimum SIP, lock-in, riskometer, benchmark,
+    or how to download a statement. Each answer is a few sentences, quoted from one official page you can open and check.</p>
+  <p class="note">Facts-only. No investment advice.</p>
 
-  <form id="ask-form" autocomplete="off">
-    <label for="question" class="sr-only">Your question</label>
-    <input id="question" type="text" maxlength="500" required
-           placeholder="Ask a factual question about an HDFC scheme">
-    <button id="ask-button" type="submit">Ask</button>
+  <form class="ask" id="ask-form" autocomplete="off">
+    <label for="question">Your question</label>
+    <div class="ask-row">
+      <input id="question" type="text" maxlength="500" required
+             placeholder="What is the exit load of HDFC Mid Cap Fund?">
+      <button id="ask-button" type="submit">Ask</button>
+    </div>
   </form>
 
-  <section class="thread" id="thread" aria-live="polite"></section>
+  <div class="examples">
+    <p id="examples-label">Or try one of these:</p>
+    <ul id="examples" aria-labelledby="examples-label"></ul>
+  </div>
+
+  <section class="thread" id="thread" aria-live="polite" aria-label="Answers"></section>
 
   <footer>
-    <p>This assistant shares publicly available scheme facts only. It is not investment advice, not a
-      recommendation to buy or sell, and not a substitute for the scheme information document, factsheet,
+    <p class="disclaimer">This assistant shares publicly available scheme facts only. It is not investment advice,
+      not a recommendation to buy or sell, and not a substitute for the scheme information document, factsheet,
       or a SEBI-registered adviser.</p>
-    <p class="status-line" id="status-line"></p>
+    <p id="corpus-line"></p>
+    <p>Built as a retrieval-augmented generation (RAG) prototype.
+      <a href="https://github.com/ritwijn/BuildHoursNov1" rel="noopener noreferrer" target="_blank">Read the source on GitHub</a>.</p>
   </footer>
 </main>
 
@@ -97,12 +286,21 @@ const DEFAULT_EXAMPLES = [
   "What is the ELSS lock-in for HDFC ELSS Tax Saver Fund Direct Plan Growth?",
   "What is the minimum SIP for HDFC Mid Cap Fund Direct Growth?",
 ];
-const ROUTES = {
-  answered: "Answered from sources", not_found: "Not in sources", refused: "Advice refused",
-  returns: "Returns not computed", out_of_scope: "Out of scope", pii: "Personal details rejected",
-  empty: "Empty question", error: "Service error",
+// Stamp shown on slips that aren't a straight answer.
+const STAMPS = {
+  not_found: "Not in the sources",
+  refused: "Advice declined",
+  returns: "Returns not calculated",
+  out_of_scope: "Outside these sources",
+  pii: "Personal details removed",
+  error: "Couldn't answer",
 };
-const PII_PLACEHOLDER = "[question removed: it contained personal details]";
+const ROUTE_NAMES = {
+  answered: "a factual question", not_found: "a factual question", refused: "a request for advice",
+  returns: "a question about returns", out_of_scope: "a question about another fund house or scheme",
+  pii: "a message containing personal details", empty: "an empty question", error: "a factual question",
+};
+const PII_PLACEHOLDER = "Question hidden because it contained personal details.";
 
 const form = document.getElementById("ask-form");
 const input = document.getElementById("question");
@@ -112,78 +310,100 @@ const thread = document.getElementById("thread");
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
-    if (key === "class") node.className = value; else node.setAttribute(key, value);
+    if (key === "class") node.className = value;
+    else if (key === "style") node.style.cssText = value;
+    else node.setAttribute(key, value);
   }
   for (const child of children) {
-    if (child == null) continue;
+    if (child == null || child === false) continue;
     node.append(child instanceof Node ? child : document.createTextNode(String(child)));
   }
   return node;
 }
 
+function hostOf(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
+}
+
 function renderExamples(examples) {
-  const box = document.getElementById("examples");
-  box.replaceChildren(...examples.map(text => {
+  document.getElementById("examples").replaceChildren(...examples.map(text => {
     const b = el("button", { type: "button" }, text);
     b.addEventListener("click", () => { input.value = text; ask(text); });
-    return b;
+    return el("li", {}, b);
   }));
 }
 
-function renderPipeline(answer) {
-  const pipe = el("div", { class: "pipe" });
-  pipe.append(el("p", {}, el("strong", {}, "Route: "), ROUTES[answer.status] || answer.status,
-    " · ", el("strong", {}, "Intent: "), answer.intent || "—",
-    " · ", el("strong", {}, "Scheme: "), answer.scheme_id || "—"));
-  if (answer.flags && answer.flags.length) {
-    const chips = el("p", { class: "chips" }, el("strong", {}, "Checks: "));
-    answer.flags.forEach(flag => chips.append(el("code", {}, flag)));
-    pipe.append(chips);
-  }
+function traceSteps(answer) {
+  const matched = (answer.flags || []).filter(f => f.startsWith("matched:")).map(f => f.slice(8));
+  const checks = (answer.flags || []).filter(f => !f.startsWith("matched:") && !f.startsWith("llm:"));
+  const model = (answer.flags || []).find(f => f.startsWith("llm:"));
+  const steps = [
+    ["Checked for personal details", "none found"],
+    [`Read as ${ROUTE_NAMES[answer.status] || "a question"}`,
+      matched.length ? `matched “${matched.join("”, “")}”` : "no keywords matched"],
+  ];
   if (answer.hits && answer.hits.length) {
-    const rows = answer.hits.map(h => el("tr", {},
-      el("td", {}, h.rank), el("td", {}, h.score.toFixed(3)), el("td", {}, h.section),
-      el("td", {}, el("code", {}, h.chunk_id)), el("td", {}, h.preview)));
-    pipe.append(el("p", {}, el("strong", {}, "Retrieved chunks")),
-      el("div", { class: "table-wrap" }, el("table", {},
-        el("thead", {}, el("tr", {}, ...["#", "score", "section", "chunk", "preview"].map(t => el("th", {}, t)))),
-        el("tbody", {}, ...rows))));
+    steps.push(["Searched the 24 sources", `kept the ${answer.hits.length} closest passages`]);
+    steps.push(model
+      ? ["Wrote the answer from those passages only", model.split(":").slice(2).join(":")]
+      : ["Skipped the language model", "the closest passages weren't close enough"]);
+    steps.push(["Checked the answer", checks.length ? checks.join("; ") : "one cited source, three sentences or fewer, every figure found in the passages"]);
   } else {
-    pipe.append(el("p", {}, "No retrieval: this route answers from a fixed template without the LLM."));
+    steps.push(["Answered from a fixed reply", "no search or language model needed"]);
+  }
+  return el("ol", { class: "steps" }, ...steps.map(([what, detail]) =>
+    el("li", {}, what, el("span", { class: "detail" }, ` (${detail})`))));
+}
+
+function renderTrace(answer) {
+  const body = el("div", { class: "trace-body" }, traceSteps(answer));
+  if (answer.hits && answer.hits.length) {
+    body.append(el("ul", { class: "passages", "aria-label": "Passages used" }, ...answer.hits.map(h =>
+      el("li", { class: "passage" },
+        el("div", { class: "head" },
+          el("span", { class: "section" }, h.section),
+          el("span", { class: "score" }, `similarity ${h.score.toFixed(2)}`)),
+        el("div", { class: "bar", "aria-hidden": "true" }, el("span", { style: `width:${Math.max(0, Math.min(1, h.score)) * 100}%` })),
+        el("p", { class: "preview" }, h.preview),
+        el("div", { class: "from" }, hostOf(h.source_url))))));
   }
   if (answer.prompt) {
-    pipe.append(el("p", {}, el("strong", {}, "Prompt sent to the LLM")),
-      el("pre", {}, answer.prompt.map(m => `[${m.role}]\n${m.content}`).join("\n\n")));
+    body.append(el("details", { class: "prompt" },
+      el("summary", {}, "Show the prompt sent to the model"),
+      el("pre", {}, answer.prompt.map(m => `[${m.role}]\n${m.content}`).join("\n\n"))));
   }
-  if (answer.query_id) {
-    pipe.append(el("p", {}, "Retrieval log id: ", el("code", {}, answer.query_id)));
-  }
-  return el("details", {}, el("summary", {}, "Pipeline view"), pipe);
+  return el("details", { class: "trace" }, el("summary", {}, "How this answer was found"), body);
 }
 
-function renderAnswer(card, question, answer) {
-  const q = answer.status === "pii"
-    ? el("p", { class: "question redacted" }, PII_PLACEHOLDER)
-    : el("p", { class: "question" }, question);
-  const bodyClass = answer.status === "error" ? "body err" : answer.status === "pii" ? "body warn" : "body";
-  const parts = [q, el("p", { class: bodyClass }, answer.body)];
+function renderSlip(slip, question, answer) {
+  const hidden = answer.status === "pii";
+  slip.className = "slip" + (answer.status === "pii" || answer.status === "error" ? " warn" : "");
+  const entry = el("div", { class: "entry" },
+    STAMPS[answer.status] && el("span", { class: "stamp" }, STAMPS[answer.status]),
+    el("p", { class: hidden ? "question redacted" : "question" }, hidden ? PII_PLACEHOLDER : question),
+    el("p", { class: "answer" }, answer.body));
+  const parts = [entry];
   if (answer.source_url) {
-    parts.push(el("p", { class: "meta" }, el("strong", {}, "Source: "),
-      el("a", { href: answer.source_url, target: "_blank", rel: "noopener noreferrer" }, answer.source_url)));
+    parts.push(el("div", { class: "stub" },
+      el("span", { class: "sr-only" }, "Source: "),
+      el("a", { class: "source-name", href: answer.source_url, target: "_blank", rel: "noopener noreferrer" },
+        answer.source_title || hostOf(answer.source_url)),
+      el("span", { class: "source-url" }, answer.source_url),
+      answer.last_updated && el("span", { class: "updated" }, `Last updated from sources: ${answer.last_updated}`)));
   }
-  if (answer.last_updated) {
-    parts.push(el("p", { class: "meta" }, el("strong", {}, "Last updated from sources: "), answer.last_updated));
-  }
-  if (answer.status !== "pii" && answer.status !== "empty") parts.push(renderPipeline(answer));
-  card.replaceChildren(...parts);
+  if (!["pii", "empty", "error"].includes(answer.status)) parts.push(renderTrace(answer));
+  slip.replaceChildren(...parts);
 }
 
-async function ask(question) {
+async function ask(question, openTrace = false) {
   question = question.trim();
   if (!question) return;
   button.disabled = true;
-  const card = el("article", { class: "turn" }, el("p", { class: "pending" }, "Looking it up…"));
-  thread.append(card);
+  const slip = el("article", { class: "slip" },
+    el("div", { class: "entry" },
+      el("p", { class: "question" }, question),
+      el("p", { class: "answer pending" }, "Looking through 24 official sources…")));
+  thread.prepend(slip);
   try {
     const response = await fetch("/api/ask", {
       method: "POST",
@@ -191,14 +411,18 @@ async function ask(question) {
       body: JSON.stringify({ question }),
     });
     if (!response.ok) {
-      const detail = await response.json().catch(() => ({}));
       throw new Error(response.status === 503
-        ? "The source corpus isn't ready yet. Run the ingest step and redeploy."
-        : (typeof detail.detail === "string" ? detail.detail : "The answer service is unavailable right now. Please try again."));
+        ? "The source library isn't loaded on the server yet. Run the ingest step, then redeploy."
+        : response.status === 422
+          ? "That question is too long. Keep it under 500 characters."
+          : "The answer service didn't respond. Try asking again in a moment.");
     }
-    renderAnswer(card, question, await response.json());
+    renderSlip(slip, question, await response.json());
+    if (openTrace) slip.querySelector("details.trace")?.setAttribute("open", "");
   } catch (err) {
-    renderAnswer(card, question, { status: "error", body: err.message || "Network error. Please try again." });
+    const offline = err instanceof TypeError;
+    renderSlip(slip, question, { status: "error",
+      body: offline ? "Couldn't reach the answer service. Check your connection and ask again." : err.message });
   } finally {
     button.disabled = false;
     input.value = "";
@@ -209,13 +433,18 @@ async function ask(question) {
 form.addEventListener("submit", event => { event.preventDefault(); ask(input.value); });
 
 renderExamples(DEFAULT_EXAMPLES);
-fetch("/api/status").then(r => r.ok ? r.json() : null).then(info => {
+// Shareable links: ?q=<question> asks it on load (repeat q for several); add &trace to open
+// "How this answer was found" on each.
+const params = new URLSearchParams(location.search);
+for (const q of params.getAll("q").reverse()) ask(q, params.has("trace"));
+fetch("/api/status").then(r => (r.ok ? r.json() : null)).then(info => {
   if (!info) return;
   if (info.examples) renderExamples(info.examples);
   if (info.ready) {
-    document.getElementById("status-line").textContent =
-      `${info.sources} official sources · ${info.chunks} chunks · last ingest ${info.last_ingest_at} · ` +
-      `${info.embedding_model} · ${info.vector_store} · ${info.llm}`;
+    const date = new Date(info.last_ingest_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    document.getElementById("corpus-line").textContent =
+      `${info.sources} official sources split into ${info.chunks.toLocaleString("en-IN")} passages, last refreshed ${date}. ` +
+      `Search uses ${info.embedding_model.split("/").pop()} embeddings in ChromaDB; answers are written by ${info.llm.split("/").pop()} on Groq.`;
   }
 }).catch(() => {});
 </script>

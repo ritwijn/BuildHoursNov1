@@ -23,7 +23,7 @@ from fastapi.responses import FileResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel, Field  # noqa: E402
 
-from src.config import get_settings  # noqa: E402
+from src.config import get_settings, load_sources  # noqa: E402
 from src.generate.service import answer_question  # noqa: E402
 from src.ingest.store import IngestRequired, read_manifest  # noqa: E402
 
@@ -80,10 +80,12 @@ def ask(request: AskRequest) -> dict:
         answer = answer_question(request.question)
     except IngestRequired as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+    titles = {source.url: source.title for source in load_sources()}
     return {
         "status": answer.status,
         "body": answer.body,
         "source_url": answer.source_url,
+        "source_title": titles.get(answer.source_url),
         "last_updated": answer.last_updated,
         "intent": answer.intent,
         "scheme_id": answer.scheme_id,

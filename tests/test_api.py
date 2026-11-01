@@ -40,6 +40,7 @@ def test_advice_question_returns_refusal_with_education_link(client):
     assert answer["status"] == "refused"
     assert "not buy/sell or portfolio advice" in answer["body"]
     assert answer["source_url"] == "https://investor.sebi.gov.in/iematerial.html"
+    assert answer["source_title"] == "SEBI Investor Education Reading Material"
     assert answer["last_updated"]
     assert answer["hits"] == [] and answer["prompt"] is None
 

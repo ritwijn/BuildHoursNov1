@@ -68,6 +68,8 @@ python -m src.cli ingest                 # scrape → load → chunk → embed �
 uvicorn api.index:app --reload           # UI + API at http://localhost:8000
 ```
 
+Shareable links: `/?q=<question>` asks a question on load (repeat `q` for several), and adding `&trace` opens *How this answer was found* on each, e.g. `/?q=What%20is%20the%20exit%20load%20of%20HDFC%20Mid%20Cap%20Fund%3F&trace`.
+
 The repo already contains the ingested corpus (scraped pages, chunks, embeddings and the Chroma store), so the server works straight after cloning. Re-run `ingest` only to refresh the sources.
 
 | Requirements file | Used by | Contents |
