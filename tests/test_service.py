@@ -134,3 +134,14 @@ def test_returns_falls_back_to_scheme_page_without_factsheet(settings, fake_retr
 def test_last_updated_field_is_configurable(settings, fake_retrieve):
     settings.answer.last_updated_field = "sources_fetched_at"
     assert ask("Should I buy HDFC Flexi Cap?", settings, FakeLLM()).last_updated == "31 Oct 2026"
+
+
+def test_llm_failure_reports_a_safe_reason_code(settings, fake_retrieve):
+    answer = ask("Expense ratio of HDFC Large Cap?", settings, FakeLLM(error=LLMError("401 key=secret", reason="auth_failed")))
+    assert "llm_reason:auth_failed" in answer.flags
+
+
+def test_missing_key_is_reported_as_not_configured(settings, fake_retrieve, monkeypatch):
+    settings.groq_api_key = None
+    answer = answer_question("Expense ratio of HDFC Large Cap?", settings=settings, sources=SOURCES)
+    assert answer.status == "error" and "llm_reason:not_configured" in answer.flags

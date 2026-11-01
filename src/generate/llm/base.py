@@ -9,7 +9,16 @@ THINK_BLOCK = re.compile(r"<think>.*?(?:</think>|$)", re.DOTALL | re.IGNORECASE)
 
 
 class LLMError(Exception):
-    """Timeout, auth, rate limit, bad model id, or missing key."""
+    """Timeout, auth, rate limit, bad model id, or missing key.
+
+    `reason` is a short code safe to show users (no provider text):
+    not_configured | unsupported_provider | auth_failed | model_not_found |
+    rate_limited | timeout | unreachable | bad_request | failed
+    """
+
+    def __init__(self, message: str, reason: str = "failed"):
+        super().__init__(message)
+        self.reason = reason
 
 
 class LLMClient(Protocol):

@@ -172,6 +172,7 @@
     background: var(--sheet);
   }
   .slip.warn .answer { color: var(--amber); }
+  .reason { font: 400 0.9rem/var(--lh) var(--sans); color: var(--ink-soft); margin: 0; }
   .slip.warn .stamp { color: var(--amber); }
 
   /* Tear-off source stub */
@@ -301,6 +302,18 @@ const ROUTE_NAMES = {
   pii: "a message containing personal details", empty: "an empty question", error: "a factual question",
 };
 const PII_PLACEHOLDER = "Question hidden because it contained personal details.";
+// Why the language model couldn't answer (API sends a code, never provider text).
+const LLM_REASONS = {
+  not_configured: "The server has no Groq API key. Add GROQ_API_KEY in the deployment's environment variables, then redeploy.",
+  auth_failed: "Groq rejected the server's API key. Check GROQ_API_KEY.",
+  model_not_found: "Groq doesn't offer the model set in LLM_MODEL. Pick a current model id.",
+  rate_limited: "Groq's rate limit was reached. Wait a minute and ask again.",
+  timeout: "Groq took too long to respond. Ask again.",
+  unreachable: "The server couldn't reach Groq. Ask again in a moment.",
+  bad_request: "Groq refused the request. Check LLM_MODEL and the prompt settings.",
+  unsupported_provider: "LLM_PROVIDER is set to a provider this app doesn't support. Use groq.",
+  failed: "The language model call failed. Ask again in a moment.",
+};
 
 const form = document.getElementById("ask-form");
 const input = document.getElementById("question");
@@ -375,13 +388,20 @@ function renderTrace(answer) {
   return el("details", { class: "trace" }, el("summary", {}, "How this answer was found"), body);
 }
 
+function reasonLine(answer) {
+  const flag = (answer.flags || []).find(f => f.startsWith("llm_reason:"));
+  if (answer.status !== "error" || !flag) return null;
+  return el("p", { class: "reason" }, LLM_REASONS[flag.slice(11)] || LLM_REASONS.failed);
+}
+
 function renderSlip(slip, question, answer) {
   const hidden = answer.status === "pii";
   slip.className = "slip" + (answer.status === "pii" || answer.status === "error" ? " warn" : "");
   const entry = el("div", { class: "entry" },
     STAMPS[answer.status] && el("span", { class: "stamp" }, STAMPS[answer.status]),
     el("p", { class: hidden ? "question redacted" : "question" }, hidden ? PII_PLACEHOLDER : question),
-    el("p", { class: "answer" }, answer.body));
+    el("p", { class: "answer" }, answer.body),
+    reasonLine(answer));
   const parts = [entry];
   if (answer.source_url) {
     parts.push(el("div", { class: "stub" },

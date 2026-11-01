@@ -82,3 +82,16 @@ def test_unknown_api_route_names_the_path(client):
     response = client.post("/api/index", json={"question": "x"})
     assert response.status_code == 404
     assert response.json()["detail"] == "No API route for /api/index"
+
+
+def test_llm_errors_expose_reason_code_but_not_provider_text(client, monkeypatch):
+    from src.models import Answer
+
+    def failing(_question):
+        return Answer(status="error", body="The answer service is unavailable right now.",
+                      flags=["llm_error:Groq request failed: AuthenticationError: key gsk_secret", "llm_reason:auth_failed"])
+
+    monkeypatch.setattr("api.index.answer_question", failing)
+    response = client.post("/api/ask", json={"question": "Expense ratio of HDFC Large Cap?"})
+    assert response.json()["flags"] == ["llm_reason:auth_failed"]
+    assert "gsk_secret" not in response.text

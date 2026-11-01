@@ -78,6 +78,7 @@ def answer_question(
         answer = Answer(status="error", body=prompts.LLM_UNAVAILABLE, prompt=messages, **common)
         answer.last_updated = None
         answer.flags.append(f"llm_error:{exc}")
+        answer.flags.append(f"llm_reason:{getattr(exc, 'reason', 'failed')}")
         return _logged(answer, settings)
 
     checked = postcheck(raw, result.hits, max_sentences=settings.answer.max_sentences, refusal_url=refusal_url)
