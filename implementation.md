@@ -2,7 +2,7 @@
 
 **Product:** Groww Mutual Fund FAQ Assistant  
 **From:** `PRD.md`, `architecture.md`  
-**Stack:** Python 3.11+, MiniLM, ChromaDB, Groq, Streamlit
+**Stack:** Python 3.11+, MiniLM, ChromaDB, Groq, FastAPI + static HTML UI, deployed on Vercel
 
 Build in this order. Each step writes files you can inspect before the next step.
 
@@ -166,7 +166,7 @@ question
 
 ## 8. UI
 
-Streamlit: `streamlit run src/ui/app.py`. UI only calls `answer_question()` — it does not scrape or embed.
+Static page `public/index.html` (plain HTML/JS) calling a FastAPI app `api/index.py` (`POST /api/ask`, `GET /api/status`). Locally: `uvicorn api.index:app`; on Vercel the page is served statically and `/api/*` runs as one Python function. The API only calls `answer_question()` — it does not scrape or embed documents.
 
 | Element | What |
 |---------|------|
@@ -177,7 +177,9 @@ Streamlit: `streamlit run src/ui/app.py`. UI only calls `answer_question()` — 
 | Pipeline expander | Intent, retrieved chunks + scores, post-check flags |
 | Footer | Disclaimer from PRD |
 
-Cache embedder + Chroma. If ingest not run, show “run ingest first”. Do not echo PII-rejected input.
+Load the embedder once per process. If ingest not run, `/api/ask` returns 503 and the page says the corpus isn't ready. Do not echo PII-rejected input (the page shows a placeholder instead).
+
+**Vercel constraints:** no PyTorch in the function (~500 MB limit). Queries use the ONNX export of the same all-MiniLM-L6-v2 (`models/`, vectors match to ~1e-7); ChromaDB's unused Kubernetes client is excluded in `vercel.json`; the read-only Chroma store is copied to `/tmp` on cold start.
 
 ---
 

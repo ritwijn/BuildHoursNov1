@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HDFC MF Facts Assistant</title>
+<meta name="description" content="Facts-only answers about HDFC Mutual Fund schemes on Groww, with one official source per answer.">
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --text: #16191d; --muted: #5d6670; --line: #e3e6ea;
+    --accent: #0b7a5c; --accent-soft: #e6f4ef; --warn: #8a5a00; --warn-soft: #fff4dc;
+    --err: #a1262c; --err-soft: #fdecec; --code: #f1f3f5;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111417; --panel: #1a1e22; --text: #e8eaed; --muted: #9aa3ad; --line: #2b3137;
+      --accent: #3ccb9b; --accent-soft: #15322a; --warn: #f0c060; --warn-soft: #33290f;
+      --err: #ff8a8f; --err-soft: #3a1a1c; --code: #23292e;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .welcome { color: var(--muted); margin: 0 0 16px; }
+  .note { display: inline-block; background: var(--accent-soft); color: var(--accent);
+          font-weight: 600; padding: 6px 12px; border-radius: 999px; margin-bottom: 20px; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+  .examples button { background: var(--panel); color: var(--text); border: 1px solid var(--line);
+          border-radius: 10px; padding: 8px 12px; font: inherit; font-size: 0.9rem; cursor: pointer; text-align: left; }
+  .examples button:hover { border-color: var(--accent); }
+  form { display: flex; gap: 8px; margin-bottom: 24px; }
+  input[type=text] { flex: 1; min-width: 0; padding: 12px 14px; font: inherit; color: var(--text);
+          background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  form button { padding: 0 18px; font: inherit; font-weight: 600; border: 0; border-radius: 10px;
+          background: var(--accent); color: #fff; cursor: pointer; }
+  form button:disabled { opacity: 0.55; cursor: wait; }
+  .thread { display: flex; flex-direction: column-reverse; gap: 16px; }
+  .turn { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .question { font-weight: 600; margin: 0 0 10px; }
+  .question.redacted { color: var(--muted); font-style: italic; font-weight: 400; }
+  .body { margin: 0 0 10px; }
+  .body.warn { background: var(--warn-soft); color: var(--warn); padding: 10px 12px; border-radius: 8px; }
+  .body.err { background: var(--err-soft); color: var(--err); padding: 10px 12px; border-radius: 8px; }
+  .meta { font-size: 0.9rem; margin: 2px 0; overflow-wrap: anywhere; }
+  .meta a { color: var(--accent); }
+  .pending { color: var(--muted); }
+  details { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; }
+  .pipe { font-size: 0.85rem; margin-top: 10px; }
+  .pipe p { margin: 4px 0; }
+  .chips code { background: var(--code); padding: 1px 6px; border-radius: 6px; margin-right: 4px; display: inline-block; margin-bottom: 4px; }
+  .table-wrap { overflow-x: auto; margin: 8px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  pre { background: var(--code); padding: 10px; border-radius: 8px; overflow-x: auto;
+        white-space: pre-wrap; font-size: 0.78rem; max-height: 320px; }
+  footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  .status-line { margin-top: 8px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<main>
+  <h1>HDFC Mutual Fund Facts Assistant</h1>
+  <p class="welcome">Ask about publicly listed facts for HDFC Mutual Fund schemes on Groww: expense ratio,
+    exit load, minimum SIP, lock-in, riskometer, benchmark, fund manager, and how to download statements.</p>
+  <div class="note" role="note">Facts-only. No investment advice.</div>
+
+  <div class="examples" id="examples" aria-label="Example questions"></div>
+
+  <form id="ask-form" autocomplete="off">
+    <label for="question" class="sr-only">Your question</label>
+    <input id="question" type="text" maxlength="500" required
+           placeholder="Ask a factual question about an HDFC scheme">
+    <button id="ask-button" type="submit">Ask</button>
+  </form>
+
+  <section class="thread" id="thread" aria-live="polite"></section>
+
+  <footer>
+    <p>This assistant shares publicly available scheme facts only. It is not investment advice, not a
+      recommendation to buy or sell, and not a substitute for the scheme information document, factsheet,
+      or a SEBI-registered adviser.</p>
+    <p class="status-line" id="status-line"></p>
+  </footer>
+</main>
+
+<script>
+const DEFAULT_EXAMPLES = [
+  "What is the expense ratio of HDFC Large Cap Fund Direct Growth?",
+  "What is the ELSS lock-in for HDFC ELSS Tax Saver Fund Direct Plan Growth?",
+  "What is the minimum SIP for HDFC Mid Cap Fund Direct Growth?",
+];
+const ROUTES = {
+  answered: "Answered from sources", not_found: "Not in sources", refused: "Advice refused",
+  returns: "Returns not computed", out_of_scope: "Out of scope", pii: "Personal details rejected",
+  empty: "Empty question", error: "Service error",
+};
+const PII_PLACEHOLDER = "[question removed: it contained personal details]";
+
+const form = document.getElementById("ask-form");
+const input = document.getElementById("question");
+const button = document.getElementById("ask-button");
+const thread = document.getElementById("thread");
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === "class") node.className = value; else node.setAttribute(key, value);
+  }
+  for (const child of children) {
+    if (child == null) continue;
+    node.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+  return node;
+}
+
+function renderExamples(examples) {
+  const box = document.getElementById("examples");
+  box.replaceChildren(...examples.map(text => {
+    const b = el("button", { type: "button" }, text);
+    b.addEventListener("click", () => { input.value = text; ask(text); });
+    return b;
+  }));
+}
+
+function renderPipeline(answer) {
+  const pipe = el("div", { class: "pipe" });
+  pipe.append(el("p", {}, el("strong", {}, "Route: "), ROUTES[answer.status] || answer.status,
+    " · ", el("strong", {}, "Intent: "), answer.intent || "—",
+    " · ", el("strong", {}, "Scheme: "), answer.scheme_id || "—"));
+  if (answer.flags && answer.flags.length) {
+    const chips = el("p", { class: "chips" }, el("strong", {}, "Checks: "));
+    answer.flags.forEach(flag => chips.append(el("code", {}, flag)));
+    pipe.append(chips);
+  }
+  if (answer.hits && answer.hits.length) {
+    const rows = answer.hits.map(h => el("tr", {},
+      el("td", {}, h.rank), el("td", {}, h.score.toFixed(3)), el("td", {}, h.section),
+      el("td", {}, el("code", {}, h.chunk_id)), el("td", {}, h.preview)));
+    pipe.append(el("p", {}, el("strong", {}, "Retrieved chunks")),
+      el("div", { class: "table-wrap" }, el("table", {},
+        el("thead", {}, el("tr", {}, ...["#", "score", "section", "chunk", "preview"].map(t => el("th", {}, t)))),
+        el("tbody", {}, ...rows))));
+  } else {
+    pipe.append(el("p", {}, "No retrieval: this route answers from a fixed template without the LLM."));
+  }
+  if (answer.prompt) {
+    pipe.append(el("p", {}, el("strong", {}, "Prompt sent to the LLM")),
+      el("pre", {}, answer.prompt.map(m => `[${m.role}]\n${m.content}`).join("\n\n")));
+  }
+  if (answer.query_id) {
+    pipe.append(el("p", {}, "Retrieval log id: ", el("code", {}, answer.query_id)));
+  }
+  return el("details", {}, el("summary", {}, "Pipeline view"), pipe);
+}
+
+function renderAnswer(card, question, answer) {
+  const q = answer.status === "pii"
+    ? el("p", { class: "question redacted" }, PII_PLACEHOLDER)
+    : el("p", { class: "question" }, question);
+  const bodyClass = answer.status === "error" ? "body err" : answer.status === "pii" ? "body warn" : "body";
+  const parts = [q, el("p", { class: bodyClass }, answer.body)];
+  if (answer.source_url) {
+    parts.push(el("p", { class: "meta" }, el("strong", {}, "Source: "),
+      el("a", { href: answer.source_url, target: "_blank", rel: "noopener noreferrer" }, answer.source_url)));
+  }
+  if (answer.last_updated) {
+    parts.push(el("p", { class: "meta" }, el("strong", {}, "Last updated from sources: "), answer.last_updated));
+  }
+  if (answer.status !== "pii" && answer.status !== "empty") parts.push(renderPipeline(answer));
+  card.replaceChildren(...parts);
+}
+
+async function ask(question) {
+  question = question.trim();
+  if (!question) return;
+  button.disabled = true;
+  const card = el("article", { class: "turn" }, el("p", { class: "pending" }, "Looking it up…"));
+  thread.append(card);
+  try {
+    const response = await fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+    if (!response.ok) {
+      const detail = await response.json().catch(() => ({}));
+      throw new Error(response.status === 503
+        ? "The source corpus isn't ready yet. Run the ingest step and redeploy."
+        : (typeof detail.detail === "string" ? detail.detail : "The answer service is unavailable right now. Please try again."));
+    }
+    renderAnswer(card, question, await response.json());
+  } catch (err) {
+    renderAnswer(card, question, { status: "error", body: err.message || "Network error. Please try again." });
+  } finally {
+    button.disabled = false;
+    input.value = "";
+    input.focus();
+  }
+}
+
+form.addEventListener("submit", event => { event.preventDefault(); ask(input.value); });
+
+renderExamples(DEFAULT_EXAMPLES);
+fetch("/api/status").then(r => r.ok ? r.json() : null).then(info => {
+  if (!info) return;
+  if (info.examples) renderExamples(info.examples);
+  if (info.ready) {
+    document.getElementById("status-line").textContent =
+      `${info.sources} official sources · ${info.chunks} chunks · last ingest ${info.last_ingest_at} · ` +
+      `${info.embedding_model} · ${info.vector_store} · ${info.llm}`;
+  }
+}).catch(() => {});
+</script>
+</body>
+</html>

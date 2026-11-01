@@ -381,7 +381,7 @@ Minimal surface (PRD §7):
 | Input + answer | Body, **Source:** URL, **Last updated from sources:** date |
 | Pipeline panel (preferred) | Show last retrieval hits / link to artifacts |
 
-**Stack:** smallest working prototype (Streamlit, Gradio, or notebook). UI is a thin client over the query pipeline; it does not scrape or embed.
+**Stack:** static HTML/JS page (`public/`) + FastAPI (`api/index.py`), deployed on Vercel (page served statically, `/api/*` as a Python function). The UI is a thin client over the query pipeline; it does not scrape or embed documents. Query embedding in the deployed function uses the ONNX export of the same MiniLM model (no PyTorch).
 
 ---
 
@@ -469,7 +469,7 @@ Each phase should leave artifacts that the next phase consumes; do not skip disk
 | Vector DB | ChromaDB (persistent) |
 | Primary LLM | Groq; model from `.env` |
 | Optional LLMs | Gemini, OpenAI, Anthropic, Mistral |
-| Language | Python (assumed for MiniLM + Chroma + Streamlit/Gradio) |
+| Language | Python (MiniLM + Chroma + FastAPI); UI in plain HTML/JS |
 
 ---
 

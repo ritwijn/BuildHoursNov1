@@ -1,22 +1,13 @@
-httpx
-beautifulsoup4
-lxml
-pypdf
-pyyaml
-pydantic
-pydantic-settings
-python-dotenv
-sentence-transformers
-chromadb
-groq
-streamlit
-pytest
-
-# Optional JS-render fallback for scraping (install Chromium separately):
-# playwright
-
-# Optional LLM providers (install only if LLM_PROVIDER is set to one of these):
-# google-genai
-# openai
-# anthropic
-# mistralai
+# Runtime for the API (this is what Vercel installs). No PyTorch: queries are embedded
+# with the ONNX export of all-MiniLM-L6-v2 in models/ (identical vectors).
+fastapi==0.162.0
+chromadb==1.5.9
+onnxruntime==1.31.1
+tokenizers==0.23.3
+numpy==2.5.4
+groq==1.7.0
+httpx==0.28.1
+pydantic==2.14.2
+pydantic-settings==2.16.2
+pyyaml==6.0.3
+python-dotenv==1.2.4

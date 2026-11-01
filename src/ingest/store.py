@@ -12,10 +12,10 @@ meaningless matches.
 from __future__ import annotations
 
 import json
+import shutil
 from datetime import datetime, timezone
 
 from src.config import Settings, get_settings
-from src.ingest.chunker import read_chunks
 from src.ingest.embedder import EmbeddingsStale, read_embeddings
 from src.models import RawMeta
 
@@ -35,6 +35,8 @@ def get_client(settings: Settings):
 
 def build_store(settings: Settings | None = None) -> dict:
     """Rebuild the collection from chunks.jsonl + data/embeddings/; return the manifest."""
+    from src.ingest.chunker import read_chunks
+
     settings = settings or get_settings()
     chunks_path = settings.resolve_path(settings.paths.chunks_file)
     if not chunks_path.exists():
@@ -44,10 +46,16 @@ def build_store(settings: Settings | None = None) -> dict:
     if [chunk.chunk_id for chunk in chunks] != chunk_ids:
         raise EmbeddingsStale("chunk order differs from embeddings; re-run `python -m src.cli embed`")
 
+    # Start from an empty directory: delete_collection() leaves the old HNSW segment
+    # folders on disk, which would pile up across rebuilds (and bloat the Vercel bundle).
+    persist_dir = settings.resolve_path(settings.chroma.persist_dir)
+    if persist_dir.exists():
+        from chromadb.api.client import SharedSystemClient
+
+        SharedSystemClient.clear_system_cache()
+        shutil.rmtree(persist_dir)
     client = get_client(settings)
     name = settings.chroma.collection
-    if name in [item.name for item in client.list_collections()]:
-        client.delete_collection(name)
     collection = client.create_collection(
         name=name,
         embedding_function=None,

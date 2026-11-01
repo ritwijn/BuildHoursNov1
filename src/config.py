@@ -29,6 +29,10 @@ class EmbeddingConfig(BaseModel):
     model: str = "sentence-transformers/all-MiniLM-L6-v2"
     normalize: bool = True
     batch_size: int = 32
+    # auto: sentence-transformers if installed (local ingest), else the ONNX export of the
+    # same model (the Vercel API, which can't ship PyTorch). Both give identical vectors.
+    backend: str = "auto"  # auto | sentence-transformers | onnx
+    onnx_dir: str = "models/all-MiniLM-L6-v2-onnx"
 
 
 class ChromaConfig(BaseModel):
@@ -97,6 +101,7 @@ class EnvOverrides(BaseSettings):
     )
 
     embedding_model: str | None = None
+    embedding_backend: str | None = None
     chroma_persist_dir: str | None = None
     chroma_collection: str | None = None
     top_k: int | None = None
@@ -141,6 +146,8 @@ def _apply_env(settings: Settings, env: EnvOverrides) -> Settings:
     data = settings.model_dump()
     if env.embedding_model:
         data["embedding"]["model"] = env.embedding_model
+    if env.embedding_backend:
+        data["embedding"]["backend"] = env.embedding_backend
     if env.chroma_persist_dir:
         data["chroma"]["persist_dir"] = env.chroma_persist_dir
     if env.chroma_collection:

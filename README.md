@@ -54,7 +54,7 @@ git clone git@github.com:ritwijn/BuildHoursNov1.git
 cd BuildHoursNov1
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt          # includes torch via sentence-transformers (large)
+pip install -r requirements-dev.txt      # ingest + local server + tests (includes PyTorch, large)
 
 cp .env.example .env                     # then set GROQ_API_KEY=... in .env
 ```
@@ -65,10 +65,30 @@ cp .env.example .env                     # then set GROQ_API_KEY=... in .env
 
 ```bash
 python -m src.cli ingest                 # scrape → load → chunk → embed → store (~1 min)
-streamlit run src/ui/app.py              # UI at http://localhost:8501
+uvicorn api.index:app --reload           # UI + API at http://localhost:8000
 ```
 
-The repo includes a snapshot of the scraped pages, chunks and embeddings (see below), so you can skip scraping with `python -m src.cli ingest --no-scrape`, which rebuilds only the Chroma store.
+The repo already contains the ingested corpus (scraped pages, chunks, embeddings and the Chroma store), so the server works straight after cloning. Re-run `ingest` only to refresh the sources.
+
+| Requirements file | Used by | Contents |
+|---|---|---|
+| `requirements.txt` | Vercel (the deployed API) | FastAPI, ChromaDB, onnxruntime, tokenizers, Groq; pinned, **no PyTorch** |
+| `requirements-dev.txt` | Local ingest, server, tests | The above + sentence-transformers, BeautifulSoup, pypdf, uvicorn, pytest |
+
+## Deploy to Vercel
+
+The app is a static page (`public/index.html`) plus one Python function (`api/index.py`, FastAPI) that Vercel routes `/api/*` to (`vercel.json`).
+
+1. In Vercel: **Add New → Project → Import** the GitHub repo. Framework preset: **Other**. No build command.
+2. **Settings → Environment Variables:** add `GROQ_API_KEY` (and optionally `LLM_MODEL`).
+3. Deploy. Open the deployment URL; `GET /api/status` should report 24 sources.
+
+How it fits Vercel's Python function size limit (~500 MB unzipped):
+- Questions are embedded with the **ONNX export of the same all-MiniLM-L6-v2 model** (`models/all-MiniLM-L6-v2-onnx/`, created by `python -m src.cli export-onnx`) instead of PyTorch. Its vectors match sentence-transformers to ~1e-7, so the stored Chroma index is queried with the same model it was built with.
+- ChromaDB's unused Kubernetes client (~120 MB) is excluded from the bundle in `vercel.json`.
+- The deployment filesystem is read-only: the bundled Chroma store is copied to `/tmp` on cold start, and retrieval logs go to `/tmp` (ephemeral, not persisted).
+
+After changing sources or chunking, re-run `ingest` locally, commit `data/`, and redeploy.
 
 ### CLI (one command per RAG stage)
 
@@ -84,6 +104,7 @@ The repo includes a snapshot of the scraped pages, chunks and embeddings (see be
 | `python -m src.cli ask -v "<q>"` | 6. Full guarded answer | adds the answer + raw LLM output to the log |
 | `python -m src.cli sample-qa` | Regenerate `Docs/sample_qa.md` | |
 | `python -m src.cli export-sources` | Regenerate `Docs/sources.csv` | |
+| `python -m src.cli export-onnx` | Copy the ONNX MiniLM used by the API | `models/all-MiniLM-L6-v2-onnx/` |
 | `python -m src.cli status` | Show config and artifact state | |
 
 ### Tests
@@ -92,7 +113,7 @@ The repo includes a snapshot of the scraped pages, chunks and embeddings (see be
 pytest -q
 ```
 
-86 tests: PII patterns, intent routing, post-check, chunking, embeddings, Chroma store, the answer service (with a fake LLM), and Streamlit UI smoke tests.
+90 tests: PII patterns, intent routing, post-check, chunking, embeddings, Chroma store, the answer service (with a fake LLM), and the FastAPI endpoints + static page.
 
 ---
 
@@ -111,7 +132,8 @@ Query:   question → PII filter → intent router ─┬─ advice / returns / 
 | Raw pages | `data/raw/` (HTML, PDF, extracted `.txt`, `.meta.json`) | yes |
 | Chunks | `data/chunks/chunks.jsonl` (2,045 chunks) | yes |
 | Embeddings | `data/embeddings/embeddings.npy` + `index.json` | yes |
-| Vector store | `data/chroma/` | no (rebuilt by `ingest --no-scrape`) |
+| Query-time model | `models/all-MiniLM-L6-v2-onnx/` (ONNX export of the same MiniLM) | yes |
+| Vector store | `data/chroma/` | yes (served by the Vercel API) |
 | Manifest | `data/ingest_manifest.json` (last ingest time, model, counts) | yes |
 | Retrieval logs | `data/retrieval_logs/` | only the 6 from `Docs/sample_qa.md` |
 
@@ -157,4 +179,5 @@ Everything tunable is in `config/settings.yaml` (overridable from `.env`):
 - **Scraping.** `www.hdfcfund.com` web pages return 403 to the scraper and are not used (their PDFs on `files.hdfcfund.com` are). CAMS / KFintech statement pages need JavaScript and are not used. The optional Playwright fallback is not installed by default.
 - **Formatting quirks** come straight from source data, e.g. ELSS lock-in reads "3 year(s)".
 - **Groq model id** (`qwen/qwen3.8-27b`) must exist in Groq's catalog; change `LLM_MODEL` in `.env` if it is retired.
-- **Local prototype.** No auth or rate limiting. `streamlit run` listens on all interfaces by default; add `--server.address localhost` to keep it local.
+- **No auth or rate limiting.** Anyone with the deployment URL can call `/api/ask`, which spends Groq quota.
+- **Vercel cold starts** take a few seconds (copying the Chroma store to `/tmp` and loading the ONNX model). Retrieval logs on Vercel live in `/tmp` and disappear between instances.

@@ -1,0 +1,18 @@
+# Everything needed locally: ingest (scrape, chunk, embed with sentence-transformers),
+# local API server, and tests.
+-r requirements.txt
+sentence-transformers
+beautifulsoup4
+lxml
+pypdf
+uvicorn
+pytest
+
+# Optional JS-render fallback for scraping (install Chromium separately):
+# playwright
+
+# Optional LLM providers (reserved config slots, not implemented):
+# google-genai
+# openai
+# anthropic
+# mistralai

@@ -1,0 +1,9 @@
+# Not needed by the deployed API / UI
+.venv/
+tests/
+data/raw/
+data/chunks/
+data/embeddings/
+data/retrieval_logs/
+.pytest_cache/
+**/__pycache__/

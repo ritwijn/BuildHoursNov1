@@ -20,7 +20,6 @@ from pathlib import Path
 import numpy as np
 
 from src.config import Settings, get_settings
-from src.ingest.chunker import read_chunks
 
 VECTORS_FILE = "embeddings.npy"
 INDEX_FILE = "index.json"
@@ -31,10 +30,58 @@ class EmbeddingsStale(Exception):
 
 
 @lru_cache(maxsize=2)
-def get_model(name: str):
+def get_model(name: str, backend: str = "sentence-transformers", onnx_dir: str | None = None):
+    """Return an object with sentence-transformers' encode() signature."""
+    if backend == "auto":
+        try:
+            import sentence_transformers  # noqa: F401
+
+            backend = "sentence-transformers"
+        except ImportError:
+            backend = "onnx"
+    if backend == "onnx":
+        return OnnxMiniLM(Path(onnx_dir or "models/all-MiniLM-L6-v2-onnx"))
     from sentence_transformers import SentenceTransformer
 
     return SentenceTransformer(name)
+
+
+class OnnxMiniLM:
+    """all-MiniLM-L6-v2 on onnxruntime: tokenize → transformer → mean pooling → L2 normalize.
+
+    Matches SentenceTransformer("all-MiniLM-L6-v2").encode(normalize_embeddings=True) to ~1e-7,
+    without PyTorch. Files come from `python -m src.cli export-onnx`.
+    """
+
+    def __init__(self, model_dir: Path):
+        import onnxruntime
+        from tokenizers import Tokenizer
+
+        if not (model_dir / "model.onnx").exists():
+            raise FileNotFoundError(f"No ONNX model in {model_dir}; run `python -m src.cli export-onnx`")
+        self.tokenizer = Tokenizer.from_file(str(model_dir / "tokenizer.json"))
+        self.tokenizer.enable_truncation(max_length=256)
+        self.tokenizer.enable_padding(pad_id=0, pad_token="[PAD]")
+        options = onnxruntime.SessionOptions()
+        options.log_severity_level = 3
+        self.session = onnxruntime.InferenceSession(
+            str(model_dir / "model.onnx"), options, providers=["CPUExecutionProvider"]
+        )
+
+    def encode(self, texts, batch_size=32, normalize_embeddings=True, **_):
+        rows = []
+        for start in range(0, len(texts), batch_size):
+            encoded = self.tokenizer.encode_batch(list(texts[start : start + batch_size]))
+            ids = np.array([e.ids for e in encoded], dtype=np.int64)
+            mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
+            inputs = {"input_ids": ids, "attention_mask": mask, "token_type_ids": np.zeros_like(ids)}
+            tokens = self.session.run(None, inputs)[0]
+            weights = mask[..., None].astype(np.float32)
+            pooled = (tokens * weights).sum(axis=1) / np.clip(weights.sum(axis=1), 1e-9, None)
+            if normalize_embeddings:
+                pooled /= np.clip(np.linalg.norm(pooled, axis=1, keepdims=True), 1e-12, None)
+            rows.append(pooled.astype(np.float32))
+        return np.concatenate(rows) if rows else np.zeros((0, 384), dtype=np.float32)
 
 
 def embed_texts(texts: list[str], settings: Settings | None = None) -> list[list[float]]:
@@ -45,7 +92,8 @@ def _encode(texts: list[str], settings: Settings) -> np.ndarray:
     cfg = settings.embedding
     if not texts:
         return np.zeros((0, 0), dtype=np.float32)
-    vectors = get_model(cfg.model).encode(
+    model = get_model(cfg.model, cfg.backend, str(settings.resolve_path(cfg.onnx_dir)))
+    vectors = model.encode(
         texts,
         batch_size=cfg.batch_size,
         normalize_embeddings=cfg.normalize,
@@ -57,6 +105,8 @@ def _encode(texts: list[str], settings: Settings) -> np.ndarray:
 
 def run_embedding(settings: Settings | None = None) -> dict:
     """Embed data/chunks/chunks.jsonl and write data/embeddings/; return the index."""
+    from src.ingest.chunker import read_chunks
+
     settings = settings or get_settings()
     chunks_path = settings.resolve_path(settings.paths.chunks_file)
     if not chunks_path.exists():

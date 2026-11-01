@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from src.config import ROOT, get_settings, load_sources
 from src.ingest.chunker import run_chunking
@@ -32,6 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     export.add_argument("--out", default="Docs/sources.csv")
     sample = sub.add_parser("sample-qa", help="Answer the sample questions and write Docs/sample_qa.md")
     sample.add_argument("--out", default="Docs/sample_qa.md")
+    sub.add_parser("export-onnx", help="Copy the ONNX all-MiniLM-L6-v2 model into models/ (for the Vercel API)")
     sub.add_parser("status", help="Show config and artifact paths")
     args = parser.parse_args(argv)
 
@@ -55,6 +57,8 @@ def main(argv: list[str] | None = None) -> int:
         return _export_sources(args.out)
     if args.command == "sample-qa":
         return _sample_qa(args.out)
+    if args.command == "export-onnx":
+        return _export_onnx()
     if args.command == "status":
         return _status()
     return 1
@@ -246,6 +250,36 @@ def _sample_qa(out: str) -> int:
     path.write_text("\n".join(lines), encoding="utf-8")
     print(f"wrote {path}")
     return 1 if failed else 0
+
+
+def _export_onnx() -> int:
+    """Fetch Chroma's ONNX export of all-MiniLM-L6-v2 and copy it to embedding.onnx_dir."""
+    import shutil
+
+    import numpy as np
+    from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+
+    from src.ingest.embedder import OnnxMiniLM, get_model
+
+    settings = get_settings()
+    if settings.embedding.model != "sentence-transformers/all-MiniLM-L6-v2":
+        print(f"export-onnx only supports all-MiniLM-L6-v2, not {settings.embedding.model}")
+        return 1
+    source_fn = ONNXMiniLM_L6_V2()
+    source_fn(["warm up"])  # downloads the model into Chroma's cache if missing
+    source = Path(source_fn.DOWNLOAD_PATH) / source_fn.EXTRACTED_FOLDER_NAME
+    target = settings.resolve_path(settings.embedding.onnx_dir)
+    target.mkdir(parents=True, exist_ok=True)
+    for name in ("model.onnx", "tokenizer.json", "config.json", "vocab.txt",
+                 "tokenizer_config.json", "special_tokens_map.json"):
+        shutil.copy2(source / name, target / name)
+
+    probe = ["What is the expense ratio of HDFC Large Cap Fund Direct Growth? (mutual funds)"]
+    onnx_vec = OnnxMiniLM(target).encode(probe)
+    reference = get_model(settings.embedding.model, "sentence-transformers").encode(probe, normalize_embeddings=True)
+    diff = float(np.abs(onnx_vec - reference).max())
+    print(f"copied to {target}; max difference vs sentence-transformers: {diff:.1e}")
+    return 0 if diff < 1e-4 else 1
 
 
 def _status() -> int:

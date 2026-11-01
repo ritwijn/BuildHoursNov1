@@ -26,7 +26,7 @@ class FakeModel:
 
 @pytest.fixture(autouse=True)
 def fake_model(monkeypatch):
-    monkeypatch.setattr(embedder, "get_model", lambda name: FakeModel())
+    monkeypatch.setattr(embedder, "get_model", lambda *args, **kwargs: FakeModel())
 
 
 def _settings(tmp_path, model=MODEL):

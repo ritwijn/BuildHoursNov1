@@ -7,13 +7,10 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.streamlit/
 
-# Stage artifacts: raw pages, chunks, embeddings and the manifest are committed as a
-# snapshot for reviewers. Chroma is rebuilt locally with `python -m src.cli ingest --no-scrape`.
+# Stage artifacts (raw pages, chunks, embeddings, Chroma store, manifest) are committed:
+# reviewers can inspect every stage, and the Vercel API serves from data/chroma/.
 # Retrieval logs are runtime output; only the ones cited in Docs/sample_qa.md are force-added.
 *.tmp
-data/chroma/*
-!data/chroma/.gitkeep
 data/retrieval_logs/*
 !data/retrieval_logs/.gitkeep

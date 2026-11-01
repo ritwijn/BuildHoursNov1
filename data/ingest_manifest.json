@@ -1,5 +1,5 @@
 {
-  "last_ingest_at": "2026-11-01T08:42:04Z",
+  "last_ingest_at": "2026-11-01T09:27:48Z",
   "sources_fetched_at": "2026-11-01T08:35:14Z",
   "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
   "embedding_dimension": 384,

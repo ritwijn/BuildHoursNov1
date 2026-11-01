@@ -2,6 +2,9 @@ embedding:
   model: sentence-transformers/all-MiniLM-L6-v2
   normalize: true
   batch_size: 32
+  # auto = sentence-transformers if installed, else ONNX export of the same model (Vercel API)
+  backend: auto
+  onnx_dir: models/all-MiniLM-L6-v2-onnx
 
 chroma:
   persist_dir: data/chroma
