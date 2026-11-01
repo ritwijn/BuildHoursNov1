@@ -26,7 +26,6 @@ from pydantic import BaseModel, Field  # noqa: E402
 
 from src.config import get_settings, load_sources  # noqa: E402
 from src.generate.service import answer_question  # noqa: E402
-from src.ingest.embedder import EmbeddingsStale  # noqa: E402
 from src.ingest.store import IngestRequired, ensure_store, read_manifest  # noqa: E402
 
 ON_VERCEL = bool(os.environ.get("VERCEL"))
@@ -50,9 +49,8 @@ def _prepare_runtime() -> None:
         settings.paths.retrieval_log_dir = "/tmp/retrieval_logs"
     try:
         ensure_store(settings)
-    except (FileNotFoundError, EmbeddingsStale) as exc:
-        # Requests will get a 503 "corpus not ready" from open_collection().
-        print(f"vector store not built: {exc}")
+    except Exception as exc:  # never crash the function at import; requests get a 503 instead
+        print(f"vector store not built: {exc.__class__.__name__}: {exc}")
 
 
 _prepare_runtime()

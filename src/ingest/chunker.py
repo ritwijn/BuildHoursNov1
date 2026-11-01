@@ -23,7 +23,6 @@ import statistics
 from pathlib import Path
 
 from src.config import ChunkingConfig, Settings, get_settings
-from src.ingest.documents import load_documents
 from src.models import Chunk, Document
 
 SECTION_SEPARATORS = ["\n", ". ", " ", ""]
@@ -160,6 +159,10 @@ def read_chunks(path: Path) -> list[Chunk]:
 
 def run_chunking(settings: Settings | None = None) -> list[Chunk]:
     """Load documents from data/raw/, chunk them, write chunks.jsonl, print a summary."""
+    # Imported here: the loader needs BeautifulSoup, which the deployed API doesn't ship;
+    # the API only uses read_chunks() from this module.
+    from src.ingest.documents import load_documents
+
     settings = settings or get_settings()
     cfg = settings.chunking
     chunks = chunk_documents(load_documents(settings=settings), cfg)
