@@ -96,3 +96,17 @@ scheme_terms:
 # e.g. "Groww ELSS Tax Saver Fund", not "download my statement on Groww".
 amc_brands_needing_fund_name:
   - groww
+
+# Regular expressions (matched on lowercased text, hyphens as spaces) for the common shapes
+# of advice questions that single keywords miss, e.g. "Do you suggest investing in…",
+# "Is HDFC Flexi Cap a good investment?", "How much should I invest?".
+advice_patterns:
+  - '\b(suggest|suggested|suggestion|advise|advice|advisable|recommend\w*)\b'
+  - '\b(should|shall|must) (i|we)\b'
+  - '\b(is|are|was) (it|this|that|they|hdfc[a-z ]{0,40}?) (a |an )?(good|great|safe|wise|right|smart|bad|risky) (investment|idea|time|choice|option|fund|scheme|buy|bet)\b'
+  - '\b(good|safe|right|best|smart|wise) (time|moment) to (invest|buy|sell|enter|exit|switch|redeem)\b'
+  - '\b(best|top|safest|better|right|good) (fund|funds|scheme|schemes|option|options|choice|pick|investment)\b'
+  - '\bwhere (should|to|do|can) (i )?(invest|put)\b'
+  - '\bhow much (should|to|do|can) (i )?(invest|put)\b'
+  - '\b(invest|buy) (now|today|right now)\b'
+  - '\b(is it|is this) (worth|wise|safe)\b'

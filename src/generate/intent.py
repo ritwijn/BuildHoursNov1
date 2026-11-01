@@ -37,8 +37,12 @@ def classify(text: str, sources: list[Source] | None = None, intents: dict[str, 
     if unknown_scheme and scheme_id is None:
         return IntentResult("out_of_scope", None, unknown_scheme)
 
+    # Record the words a pattern matched (e.g. "suggest"), not the regex, for the pipeline view.
+    advice_shapes = [m.group(0) for p in intents.get("advice_patterns", []) if (m := re.search(p, lowered))]
     for intent in ("advice", "returns", "factual"):
         matched = _matches(lowered, intents.get(intent, []))
+        if intent == "advice":
+            matched += [shape for shape in advice_shapes if shape not in matched]
         if matched:
             return IntentResult(intent, scheme_id, matched)
     return IntentResult("other", scheme_id, [])
