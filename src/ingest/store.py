@@ -1,5 +1,9 @@
 """Persist chunk vectors in ChromaDB and write data/ingest_manifest.json.
 
+The Chroma store itself is not committed: it is rebuilt from the committed
+chunks.jsonl + data/embeddings/ by `ingest`/`store`, or on demand by
+ensure_store() (Vercel cold start, fresh clone, or after new data lands).
+
 Every build deletes and recreates the collection so no stale chunks survive a
 re-chunk. Vectors come from data/embeddings/ (validated against the current
 model and chunks.jsonl), never re-computed here.
@@ -33,8 +37,12 @@ def get_client(settings: Settings):
     return chromadb.PersistentClient(path=str(path), settings=ChromaSettings(anonymized_telemetry=False))
 
 
-def build_store(settings: Settings | None = None) -> dict:
-    """Rebuild the collection from chunks.jsonl + data/embeddings/; return the manifest."""
+def build_store(settings: Settings | None = None, *, write_manifest: bool = True) -> dict:
+    """Rebuild the collection from chunks.jsonl + data/embeddings/.
+
+    With write_manifest (ingest), also write data/ingest_manifest.json and return it.
+    Without it (runtime rebuilds), the committed manifest stays the source of truth.
+    """
     from src.ingest.chunker import read_chunks
 
     settings = settings or get_settings()
@@ -60,7 +68,11 @@ def build_store(settings: Settings | None = None) -> dict:
         name=name,
         embedding_function=None,
         configuration={"hnsw": {"space": settings.chroma.distance}},
-        metadata={"embedding_model": index["embedding_model"], "dimension": index["dimension"]},
+        metadata={
+            "embedding_model": index["embedding_model"],
+            "dimension": index["dimension"],
+            "chunks_sha256": index["chunks_sha256"],
+        },
     )
 
     batch = client.get_max_batch_size()
@@ -86,6 +98,8 @@ def build_store(settings: Settings | None = None) -> dict:
         raise RuntimeError(f"Chroma holds {count} vectors but there are {len(chunks)} chunks")
 
     source_ids = sorted({chunk.source_id for chunk in chunks})
+    if not write_manifest:
+        return {"chroma_collection": name, "chunk_count": count, "source_count": len(source_ids)}
     manifest = {
         "last_ingest_at": _now(),
         "sources_fetched_at": _oldest_fetch(settings, source_ids),
@@ -123,6 +137,23 @@ def open_collection(settings: Settings | None = None):
     if collection.count() == 0:
         raise IngestRequired(f"Chroma collection '{name}' is empty; run `python -m src.cli ingest`")
     return collection
+
+
+def ensure_store(settings: Settings | None = None) -> bool:
+    """Make sure the collection matches the committed embeddings; rebuild if not.
+
+    Returns True if it (re)built. Raises if there is nothing to build from.
+    """
+    settings = settings or get_settings()
+    _, _, index = read_embeddings(settings)
+    try:
+        collection = open_collection(settings)
+        if (collection.metadata or {}).get("chunks_sha256") == index["chunks_sha256"]:
+            return False
+    except IngestRequired:
+        pass
+    build_store(settings, write_manifest=False)
+    return True
 
 
 def read_manifest(settings: Settings | None = None) -> dict | None:

@@ -5,7 +5,7 @@ import pytest
 
 from src.config import ChromaConfig, EmbeddingConfig, PathsConfig, Settings
 from src.ingest import embedder
-from src.ingest.chunker import write_chunks
+from src.ingest.chunker import read_chunks, write_chunks
 from src.ingest.embedder import EmbeddingsStale, run_embedding
 from src.ingest.store import IngestRequired, build_store, open_collection, read_manifest
 from src.models import Chunk
@@ -120,3 +120,27 @@ def test_build_store_refuses_stale_embeddings(tmp_path):
     write_chunks([], settings.resolve_path(settings.paths.chunks_file))
     with pytest.raises(EmbeddingsStale):
         build_store(settings)
+
+
+def test_ensure_store_builds_when_missing_and_rebuilds_when_stale(tmp_path):
+    from src.ingest.store import ensure_store
+
+    settings = _prepare(tmp_path)
+    assert ensure_store(settings) is True  # nothing built yet
+    assert ensure_store(settings) is False  # up to date
+    assert open_collection(settings).count() == 3
+
+    # New data lands (e.g. a scheduled refresh): fewer chunks, re-embedded.
+    write_chunks(
+        [c for c in read_chunks(settings.resolve_path(settings.paths.chunks_file)) if c.source_id == "a"],
+        settings.resolve_path(settings.paths.chunks_file),
+    )
+    run_embedding(settings)
+    assert ensure_store(settings) is True
+    assert sorted(open_collection(settings).get()["ids"]) == ["a::000", "a::001"]
+
+
+def test_runtime_build_does_not_touch_the_manifest(tmp_path):
+    settings = _prepare(tmp_path)
+    build_store(settings, write_manifest=False)
+    assert read_manifest(settings) is None

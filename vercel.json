@@ -9,8 +9,8 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
-      "includeFiles": "{src/**,config/**,data/chroma/**,data/ingest_manifest.json,models/**}",
-      "excludeFiles": "{.venv/**,tests/**,Docs/**,data/raw/**,data/chunks/**,data/embeddings/**,data/retrieval_logs/**,**/kubernetes/**,**/__pycache__/**}"
+      "includeFiles": "{src/**,config/**,data/chunks/chunks.jsonl,data/embeddings/**,data/ingest_manifest.json,models/**}",
+      "excludeFiles": "{.venv/**,tests/**,Docs/**,data/raw/**,data/chroma/**,data/retrieval_logs/**,**/kubernetes/**,**/__pycache__/**}"
     }
   }
 }

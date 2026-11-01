@@ -34,6 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     sample = sub.add_parser("sample-qa", help="Answer the sample questions and write Docs/sample_qa.md")
     sample.add_argument("--out", default="Docs/sample_qa.md")
     sub.add_parser("export-onnx", help="Copy the ONNX all-MiniLM-L6-v2 model into models/ (for the Vercel API)")
+    sub.add_parser("validate", help="Check scraped data still has the key facts (guards the scheduled refresh)")
     sub.add_parser("status", help="Show config and artifact paths")
     args = parser.parse_args(argv)
 
@@ -59,6 +60,8 @@ def main(argv: list[str] | None = None) -> int:
         return _sample_qa(args.out)
     if args.command == "export-onnx":
         return _export_onnx()
+    if args.command == "validate":
+        return _validate()
     if args.command == "status":
         return _status()
     return 1
@@ -280,6 +283,36 @@ def _export_onnx() -> int:
     diff = float(np.abs(onnx_vec - reference).max())
     print(f"copied to {target}; max difference vs sentence-transformers: {diff:.1e}")
     return 0 if diff < 1e-4 else 1
+
+
+# Facts every Groww scheme page must still yield. If a page redesign breaks extraction,
+# the refresh stops here instead of replacing good data with empty pages.
+REQUIRED_SCHEME_FACTS = ("Expense ratio:", "Exit load:", "Minimum SIP:", "Lock-in:", "Riskometer:", "Benchmark:")
+
+
+def _validate() -> int:
+    from src.ingest.documents import read_documents
+
+    problems = []
+    result = read_documents()
+    # Strict: a source that fails today (even an optional one) would silently drop out of
+    # the corpus on re-ingest, so refresh only when every registered source loaded.
+    problems += [f"{item.source_id}: {item.detail}" for item in result.statuses if item.status != "ok"]
+    for document in result.documents:
+        text = "\n".join(section.text for section in document.sections)
+        if document.type == "scheme":
+            missing = [fact.rstrip(":") for fact in REQUIRED_SCHEME_FACTS if fact not in text]
+            if missing:
+                problems.append(f"{document.source_id}: missing {', '.join(missing)}")
+        elif document.type == "amc" and len(text) < 1000:
+            problems.append(f"{document.source_id}: only {len(text)} characters extracted")
+    if problems:
+        print("validation failed:")
+        for problem in problems:
+            print(f"  - {problem}")
+        return 1
+    print(f"validation passed: {len(result.documents)} sources, all scheme pages have their key facts")
+    return 0
 
 
 def _status() -> int:

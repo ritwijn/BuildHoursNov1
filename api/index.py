@@ -3,14 +3,14 @@
 Local:   uvicorn api.index:app --reload        → http://localhost:8000
 Vercel:  this file is the Python function; Vercel serves public/ itself and routes /api/* here.
 
-On Vercel the deployment filesystem is read-only, so the bundled Chroma store is copied
-to /tmp on cold start and retrieval logs go to /tmp (ephemeral).
+The Chroma store isn't committed: it is built from the committed embeddings at startup
+(/tmp on Vercel, whose bundle is read-only; data/chroma/ locally). Retrieval logs on
+Vercel go to /tmp (ephemeral).
 """
 
 from __future__ import annotations
 
 import os
-import shutil
 import sys
 from urllib.parse import parse_qsl, urlencode
 from pathlib import Path
@@ -26,7 +26,8 @@ from pydantic import BaseModel, Field  # noqa: E402
 
 from src.config import get_settings, load_sources  # noqa: E402
 from src.generate.service import answer_question  # noqa: E402
-from src.ingest.store import IngestRequired, read_manifest  # noqa: E402
+from src.ingest.embedder import EmbeddingsStale  # noqa: E402
+from src.ingest.store import IngestRequired, ensure_store, read_manifest  # noqa: E402
 
 ON_VERCEL = bool(os.environ.get("VERCEL"))
 PUBLIC = ROOT / "public"
@@ -38,16 +39,20 @@ EXAMPLES = [
 
 
 def _prepare_runtime() -> None:
-    """Point Chroma and logs at writable /tmp copies when the bundle is read-only."""
-    if not ON_VERCEL:
-        return
+    """Build the Chroma store from the committed embeddings if it's missing or stale.
+
+    On Vercel the bundle is read-only, so the store and retrieval logs live in /tmp
+    (rebuilt once per cold start, ~1 s). Locally it lives in data/chroma/.
+    """
     settings = get_settings()
-    bundled = settings.resolve_path(settings.chroma.persist_dir)
-    writable = Path("/tmp/chroma")
-    if not writable.exists() and bundled.exists():
-        shutil.copytree(bundled, writable)
-    settings.chroma.persist_dir = str(writable)
-    settings.paths.retrieval_log_dir = "/tmp/retrieval_logs"
+    if ON_VERCEL:
+        settings.chroma.persist_dir = "/tmp/chroma"
+        settings.paths.retrieval_log_dir = "/tmp/retrieval_logs"
+    try:
+        ensure_store(settings)
+    except (FileNotFoundError, EmbeddingsStale) as exc:
+        # Requests will get a 503 "corpus not ready" from open_collection().
+        print(f"vector store not built: {exc}")
 
 
 _prepare_runtime()

@@ -133,6 +133,10 @@ On ingest: **rebuild** the collection (no stale chunks). Store `id`, embedding, 
 
 If collection embedding model ≠ config → error: “re-run ingest”. Empty collection → do not call the LLM.
 
+**Not committed:** `data/chroma/` is rebuilt from the committed chunks + embeddings by `ingest`, or by `ensure_store()` at API startup (missing, or built from older chunks per its `chunks_sha256` fingerprint). On Vercel it is built in `/tmp` on cold start (~1 s).
+
+**Scheduled refresh:** `.github/workflows/refresh-sources.yml` re-scrapes daily, re-ingests only when extracted text changed, and only after `cli validate` passes; it commits the new data and Vercel redeploys.
+
 **Done when:** `collection.count() ==` chunk count; second ingest does not duplicate.
 
 ---

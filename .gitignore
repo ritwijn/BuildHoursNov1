@@ -8,9 +8,11 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# Stage artifacts (raw pages, chunks, embeddings, Chroma store, manifest) are committed:
-# reviewers can inspect every stage, and the Vercel API serves from data/chroma/.
-# Retrieval logs are runtime output; only the ones cited in Docs/sample_qa.md are force-added.
+# Stage artifacts (raw pages, chunks, embeddings, manifest) are committed so reviewers can
+# inspect every stage. The Chroma store is not: it is rebuilt from the embeddings (ingest,
+# or automatically when the API starts). Retrieval logs are runtime output; only the ones
+# cited in Docs/sample_qa.md are force-added.
 *.tmp
+data/chroma/
 data/retrieval_logs/*
 !data/retrieval_logs/.gitkeep

@@ -70,7 +70,7 @@ uvicorn api.index:app --reload           # UI + API at http://localhost:8000
 
 Shareable links: `/?q=<question>` asks a question on load (repeat `q` for several), and adding `&trace` opens *How this answer was found* on each, e.g. `/?q=What%20is%20the%20exit%20load%20of%20HDFC%20Mid%20Cap%20Fund%3F&trace`.
 
-The repo already contains the ingested corpus (scraped pages, chunks, embeddings and the Chroma store), so the server works straight after cloning. Re-run `ingest` only to refresh the sources.
+The repo already contains the ingested corpus (scraped pages, chunks and embeddings), so the server works straight after cloning: on startup it builds the Chroma store from the committed embeddings in about a second. Re-run `ingest` only to refresh the sources (or let the scheduled refresh below do it).
 
 | Requirements file | Used by | Contents |
 |---|---|---|
@@ -88,9 +88,20 @@ The app is a static page (`public/index.html`) plus one Python function (`api/in
 How it fits Vercel's Python function size limit (~500 MB unzipped):
 - Questions are embedded with the **ONNX export of the same all-MiniLM-L6-v2 model** (`models/all-MiniLM-L6-v2-onnx/`, created by `python -m src.cli export-onnx`) instead of PyTorch. Its vectors match sentence-transformers to ~1e-7, so the stored Chroma index is queried with the same model it was built with.
 - ChromaDB's unused Kubernetes client (~120 MB) is excluded from the bundle in `vercel.json`.
-- The deployment filesystem is read-only: the bundled Chroma store is copied to `/tmp` on cold start, and retrieval logs go to `/tmp` (ephemeral, not persisted).
+- The Chroma store isn't committed. The function bundles the chunks and embeddings (~5 MB) and builds the store in `/tmp` on each cold start (~1 s). Retrieval logs also go to `/tmp` (ephemeral, not persisted).
 
 After changing sources or chunking, re-run `ingest` locally, commit `data/`, and redeploy.
+
+## Keeping the data fresh
+
+`.github/workflows/refresh-sources.yml` runs daily at 03:00 IST (and on demand from the Actions tab):
+
+1. Re-scrapes every source in `config/sources.yaml`.
+2. Compares the **extracted text** with what's committed (raw HTML/PDF bytes change on every fetch, so they aren't compared). No change → the job ends.
+3. On change: `python -m src.cli validate` (every source loaded, and every scheme page still has expense ratio, exit load, minimum SIP, lock-in, riskometer and benchmark) → `ingest --no-scrape` → `pytest`.
+4. Commits the new raw text, chunks, embeddings, manifest and `Docs/sources.csv`. The push redeploys Vercel, and "Last updated from sources" moves to the new ingest date.
+
+If scraping or validation fails (a site is down, or a page redesign breaks extraction), the job fails, **nothing is committed**, the live data stays as it was, and GitHub emails the repo owner. CI embeds with the ONNX MiniLM, so it needs no PyTorch; its vectors match the local ones to ~1e-7.
 
 ### CLI (one command per RAG stage)
 
@@ -135,7 +146,7 @@ Query:   question → PII filter → intent router ─┬─ advice / returns / 
 | Chunks | `data/chunks/chunks.jsonl` (2,045 chunks) | yes |
 | Embeddings | `data/embeddings/embeddings.npy` + `index.json` | yes |
 | Query-time model | `models/all-MiniLM-L6-v2-onnx/` (ONNX export of the same MiniLM) | yes |
-| Vector store | `data/chroma/` | yes (served by the Vercel API) |
+| Vector store | `data/chroma/` | no (built from the embeddings by `ingest`, or automatically at startup) |
 | Manifest | `data/ingest_manifest.json` (last ingest time, model, counts) | yes |
 | Retrieval logs | `data/retrieval_logs/` | only the 6 from `Docs/sample_qa.md` |
 
@@ -173,7 +184,9 @@ Everything tunable is in `config/settings.yaml` (overridable from `.env`):
 
 ## Known limits
 
-- **Facts can be stale.** "Last updated from sources" is the ingest time, not a live NAV/TER feed. Scheme documents are dated (KIM/SID 21 Nov 2025, factsheet June 2026); re-run `ingest` to refresh.
+- **Facts can be up to a day old.** The daily refresh re-checks every source, and "Last updated from sources" is the last time the content actually changed and was re-ingested. It is not a live NAV/TER feed.
+- **New document versions aren't discovered automatically.** The refresh re-fetches the same URLs. Groww pages update in place, but HDFC publishes new KIM/SID/factsheet editions at new URLs (current ones: KIM/SID 21 Nov 2025, factsheet June 2026), so those need a `sources.yaml` update.
+- **Scraping from CI can be blocked.** If a site starts refusing GitHub's servers, the refresh fails safely and keeps the last good data.
 - **Small, fixed corpus.** Questions about other AMCs, other HDFC schemes, or Groww Mutual Fund's schemes fail closed. Facts that are on none of the 24 pages get "I couldn't find that in my sources."
 - **Rules-first intent routing.** Keyword lists can misroute unusual phrasings (e.g. "Should I check the exit load?" is treated as advice). Questions with no keyword still go through retrieval and the score threshold.
 - **Retrieval is phrasing-sensitive.** MiniLM is small; very short or unusual questions can retrieve weaker chunks. The post-check and "couldn't find" fallback keep this from producing invented facts, but some answerable questions may be declined.

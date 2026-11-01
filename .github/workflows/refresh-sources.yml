@@ -1,0 +1,77 @@
+# Daily source refresh: re-scrape the official pages, and only if their extracted text
+# changed, validate → re-ingest → test → commit. The push redeploys Vercel, which rebuilds
+# the Chroma store from the new embeddings on its next cold start.
+#
+# Safe by default: if scraping a required source fails, or a scheme page no longer yields
+# its key facts (e.g. a page redesign), the job fails, nothing is committed, the live data
+# stays as it was, and GitHub notifies the repo owner.
+name: Refresh sources
+
+on:
+  schedule:
+    - cron: "30 21 * * *" # daily, 03:00 IST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-sources
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      # Runtime deps + ingest/test extras, without sentence-transformers/PyTorch:
+      # embeddings use the committed ONNX export of the same MiniLM model (identical vectors).
+      - name: Install
+        run: pip install -r requirements.txt beautifulsoup4 lxml pypdf pytest
+
+      - name: Scrape sources
+        run: python -m src.cli scrape
+
+      - name: Detect content changes
+        id: changes
+        run: |
+          # Compare extracted text, not raw HTML/PDF bytes (those change on every fetch).
+          changed=$(git diff --name-only -- 'data/raw/*.txt' | sed 's#data/raw/##; s#\.txt$##' | paste -sd ' ' -)
+          echo "sources=$changed" >> "$GITHUB_OUTPUT"
+          if [ -z "$changed" ]; then
+            echo "No source text changed; nothing to ingest."
+          else
+            echo "Changed sources: $changed"
+          fi
+
+      - name: Validate scraped data
+        if: steps.changes.outputs.sources != ''
+        run: python -m src.cli validate
+
+      - name: Re-ingest (chunk, embed, store)
+        if: steps.changes.outputs.sources != ''
+        run: python -m src.cli ingest --no-scrape
+
+      - name: Test
+        if: steps.changes.outputs.sources != ''
+        run: python -m pytest -q
+
+      - name: Commit refreshed data
+        if: steps.changes.outputs.sources != ''
+        env:
+          CHANGED: ${{ steps.changes.outputs.sources }}
+        run: |
+          python -m src.cli export-sources
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw data/chunks/chunks.jsonl data/embeddings data/ingest_manifest.json Docs/sources.csv
+          git commit -m "Refresh sources: $CHANGED" -m "Automated by .github/workflows/refresh-sources.yml"
+          git push
