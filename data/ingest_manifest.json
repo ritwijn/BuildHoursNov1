@@ -1,6 +1,6 @@
 {
-  "last_ingest_at": "2026-11-01T09:27:48Z",
-  "sources_fetched_at": "2026-11-01T08:35:14Z",
+  "last_ingest_at": "2026-11-06T01:45:20Z",
+  "sources_fetched_at": "2026-11-06T01:42:39Z",
   "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
   "embedding_dimension": 384,
   "chroma_persist_dir": "data/chroma",

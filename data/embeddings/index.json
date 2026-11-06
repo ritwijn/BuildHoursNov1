@@ -3,8 +3,8 @@
   "normalized": true,
   "dimension": 384,
   "count": 2045,
-  "created_at": "2026-11-01T08:42:03Z",
-  "chunks_sha256": "c13d69407cd3f0a1fd2d23b4e21b55ea8de12289e752be08b84a83bf7b8888ca",
+  "created_at": "2026-11-06T01:45:18Z",
+  "chunks_sha256": "0fc166bee480ebfcca6aad9f56c93c5afbb9164c3c01e1f543485338e8be8183",
   "chunk_ids": [
     "hdfc-amc::000",
     "hdfc-amc::001",

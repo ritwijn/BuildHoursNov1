@@ -4,7 +4,7 @@ Scheme name: HDFC Large Cap Fund Direct Growth
 Fund house: HDFC Mutual Fund
 Category: Equity
 Sub-category: Large Cap
-Expense ratio: 1.02%
+Expense ratio: 1.01%
 Exit load: Exit load of 1% if redeemed within 1 year
 Minimum SIP: ₹100
 Minimum lumpsum: ₹100
